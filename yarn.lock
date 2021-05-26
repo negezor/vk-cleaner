@@ -916,15 +916,15 @@
     "@typescript-eslint/types" "4.25.0"
     eslint-visitor-keys "^2.0.0"
 
-"@vk-io/authorization@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@vk-io/authorization/-/authorization-1.1.0.tgz#834d773abe18b94d3f97b3c7172809bd682acc93"
-  integrity sha512-Rt178dqcMRwadCErN0Eys0Q0MhJvGJP4xa9aeVPMJkbYgmtUCPMxKKY9ux+2iQMyqyQ5Hlyuzmh970SPIBsoYQ==
+"@vk-io/authorization@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@vk-io/authorization/-/authorization-1.2.0.tgz#2e0dc132d40b52f27cec6e756491f86c790b24f4"
+  integrity sha512-YBNrMbKkqBVH3nYSKYYZn3QbYOKIoatU4co80H2RR8RNgQPhKRfKH2Bgti+pJPnfK0Ttavf62wc4YaGZPT1CXA==
   dependencies:
     abort-controller "^3.0.0"
-    cheerio "^1.0.0-rc.6"
+    cheerio "^1.0.0-rc.9"
     debug "^4.3.1"
-    inspectable "^1.1.1"
+    inspectable "^1.2.0"
     node-fetch "^2.6.1"
     tough-cookie "^4.0.0"
 
@@ -1294,7 +1294,7 @@ cheerio-select@^1.4.0:
     domhandler "^4.2.0"
     domutils "^2.6.0"
 
-cheerio@^1.0.0-rc.6:
+cheerio@^1.0.0-rc.9:
   version "1.0.0-rc.9"
   resolved "https://registry.yarnpkg.com/cheerio/-/cheerio-1.0.0-rc.9.tgz#a3ae6b7ce7af80675302ff836f628e7cb786a67f"
   integrity sha512-QF6XVdrLONO6DXRF5iaolY+odmhj2CLj+xzNod7INPWMi/x9X4SOylH0S/vaPpX+AUU6t04s34SQNh7DbkuCng==
@@ -2298,10 +2298,10 @@ inquirer@^7.0.0:
     strip-ansi "^6.0.0"
     through "^2.3.6"
 
-inspectable@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/inspectable/-/inspectable-1.1.1.tgz#7a9ecc277e483b00ca9a4eadd08bf22659b23585"
-  integrity sha512-dMT0Qj7iXzWt4pjAVRkWBdq8u1Yro5BEHDwv5EdNrIcbDp1wfhrYrWu4P48eAK5VA5MmVWPtKUB/xvBQA92rXw==
+inspectable@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/inspectable/-/inspectable-1.2.0.tgz#c4e43c4a81534cfb166a06668a4ebfb8ea1dae65"
+  integrity sha512-5czj8MJaTEL6xO7YmIwNPxrJQI+caxU9a2JcaN/0tVpkMZfKTh5FK+OafsMtnpBT4ekxcaHZOW3+DrluBVaLOQ==
 
 is-arrayish@^0.2.1:
   version "0.2.1"
@@ -4130,15 +4130,15 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vk-io@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/vk-io/-/vk-io-4.2.0.tgz#ff16cd94ef8f96eacf3deac95eb448137bd8bbea"
-  integrity sha512-jBoS3NhJU5qHULcd2uYKvS3sT6aYxj66F0CD7ryeHci4jMpHVzmuT8NCueJrygoJDccm3pX+DzbGY6JeVaB8FQ==
+vk-io@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/vk-io/-/vk-io-4.3.0.tgz#481c9df61c2ae7053565a7ead85bb6c57262c53d"
+  integrity sha512-fgknAy5KxC7zGbD55b1j52knrwbF2V5J6dFQ84KiHw94F/Ix4c14nuMVkRwxftc+m0ZrPHqVaRaS2OF9vFOU+A==
   dependencies:
     abort-controller "^3.0.0"
     debug "^4.3.1"
     form-data "^4.0.0"
-    inspectable "^1.1.1"
+    inspectable "^1.2.0"
     middleware-io "^2.6.0"
     node-fetch "^2.6.1"
 
