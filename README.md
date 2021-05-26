@@ -7,6 +7,7 @@ Clears your personal page using GDPR data.
 
 ## Requirement
 > **[Node.js](https://nodejs.org/) 14.0.0 or newer is required**
+
 > **[VK Archive](https://vk.com/data_protection?section=rules&scroll_to_archive=1) with comments**
 
 ## Simple usage
