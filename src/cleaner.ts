@@ -84,7 +84,7 @@ async function run() {
 		token: accessToken
 	});
 
-	const supportedActions = await Promise.all(
+	const rawSupportedActions = await Promise.all(
 		Object.values(actions)
 			.map(async (action) => {
 				const supported = await action.canRun({
@@ -100,8 +100,9 @@ async function run() {
 
 				return action;
 			})
-			.filter(Boolean)
-	) as IAction[];
+	);
+
+	const supportedActions = rawSupportedActions.filter(Boolean)  as IAction[];
 
 	if (supportedActions.length === 0) {
 		reporter.warn('No supported cleaning methods found');
