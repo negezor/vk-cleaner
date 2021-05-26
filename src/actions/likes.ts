@@ -8,7 +8,12 @@ import { join as pathJoin } from 'path';
 
 import { IAction } from './action';
 
-import { formatDuration, getDirectories, getFiles, delay } from '../helpers';
+import {
+	formatDuration,
+	getDirectories,
+	getFiles,
+	delay
+} from '../helpers';
 import { reporter } from '../reporter';
 
 export interface IDeleteLikeOptions {
