@@ -24,7 +24,7 @@ Clears your personal page using GDPR data.
 
 - Unpack VK Archive to Archive folder
 - Open a terminal in this folder
-- Typing `curl -L https://raw.githubusercontent.com/negezor/vk-cleaner/master/dist/cleaner.js | node` in terminal and <kbd>Enter</kbd>
+- Typing `curl -s https://raw.githubusercontent.com/negezor/vk-cleaner/master/dist/cleaner.js > cleaner.js && node cleaner.js` in terminal and <kbd>Enter</kbd>
 - Follow the script instructions
 - Congratulations!
 
