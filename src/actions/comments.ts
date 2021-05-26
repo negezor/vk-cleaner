@@ -65,20 +65,19 @@ export const commentsAction: IAction = {
 	async handler({ api, archivePath }) {
 		const commentsPath = pathJoin(archivePath, 'comments');
 
-		const htmlFilenames = getFiles(commentsPath)
-			.filter(file => file.endsWith('.html'));
+		const htmlFilePaths = getFiles(commentsPath)
+			.filter(filename => filename.endsWith('.html'))
+			.map(filename => pathJoin(commentsPath, filename));
 
 		const commentsForDelete: IDeleteCommentOptions[] = [];
 
 		const parseCompletedChain = Promise.resolve();
 
-		const checkFilesTick = reporter.progress(htmlFilenames.length);
+		const checkFilesTick = reporter.progress(htmlFilePaths.length);
 
-		reporter.info(`Start parsing comment files. Number of files to check: ${htmlFilenames.length}`);
+		reporter.info(`Start parsing comment files. Number of files to check: ${htmlFilePaths.length}`);
 
-		for (const filename of htmlFilenames) {
-			const htmlFilePath = pathJoin(commentsPath, filename);
-
+		for (const htmlFilePath of htmlFilePaths) {
 			const htmlFileStream = createReadStream(htmlFilePath);
 
 			const htmlParserStream = new HTMLParserStream({
