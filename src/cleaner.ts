@@ -133,6 +133,32 @@ async function run() {
 		return;
 	}
 
+	const actionsForConfirm = selectedActions
+		.map(action => (
+			`- ${action.name} — ${action.description}`
+		))
+		.join('\n');
+
+	const confirmed = await reporter.prompt(
+		stripIndents`
+			Are you sure you want to run these actions?
+
+			${actionsForConfirm}
+
+			THESE ACTIONS ARE IRREVERSIBLE!
+		`,
+		[],
+		{
+			type: 'confirm'
+		}
+	);
+
+	if (!confirmed) {
+		reporter.success('Have a nice day!');
+
+		return;
+	}
+
 	for (const action of selectedActions) {
 		reporter.info(`Start ${action.name.toLowerCase()}`);
 
@@ -158,6 +184,8 @@ async function run() {
 	}
 
 	reporter.success('Completed!');
+
+	process.exit(0);
 }
 
 run().catch((error) => {
@@ -168,4 +196,6 @@ run().catch((error) => {
 
 	// eslint-disable-next-line no-console
 	console.error(error);
+
+	process.exit(1);
 });
