@@ -159,6 +159,8 @@ async function run() {
 		return;
 	}
 
+	await delay(3000);
+
 	for (const action of selectedActions) {
 		reporter.info(`Start ${action.name.toLowerCase()}`);
 
