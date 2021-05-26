@@ -22,6 +22,7 @@
 		"@types/common-tags": "^1.8.0",
 		"@vk-io/authorization": "^1.1.0",
 		"common-tags": "^1.8.0",
+		"htmlparser2": "^6.1.0",
 		"vk-io": "^4.2.0",
 		"yurnalist": "^2.1.0"
 	},
