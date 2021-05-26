@@ -142,7 +142,7 @@ export const commentsAction: IAction = {
 		reporter.info(stripIndents`
 			You wrote ${commentsForDelete.length} comments
 
-			It will take approximately ${formatDuration(commentsForDelete.length * 1.3 * 1000)} to delete comments
+			It will take approximately ${formatDuration(commentsForDelete.length * 1.2 * 1000)} to delete comments
 		`);
 
 		const deleteCommentsTick = reporter.progress(commentsForDelete.length);
