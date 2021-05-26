@@ -1,0 +1,15 @@
+# Logs
+logs
+*.log
+
+# Dependency directories
+node_modules
+
+# Build
+lib
+
+# Archive
+Archive
+
+# Auth
+access-token.txt
