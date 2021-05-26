@@ -14,7 +14,7 @@
 	},
 	"homepage": "https://github.com/negezor/vk-cleaner#readme",
 	"bugs": "https://github.com/negezor/vk-cleaner/issues",
-	"main": "lib/index",
+	"main": "dist/cleaner.js",
 	"engines": {
 		"node": ">=14.0.0"
 	},

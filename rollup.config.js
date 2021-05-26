@@ -11,7 +11,7 @@ import pkg from './package.json';
 const cacheRoot = pathJoin(tmpdir(), '.rpt2_cache');
 
 const src = pathJoin(__dirname, 'src');
-const lib = pathJoin(__dirname, 'lib');
+const dist = pathJoin(__dirname, 'dist');
 
 // eslint-disable-next-line import/no-default-export
 export default {
@@ -20,16 +20,20 @@ export default {
 		? Object.keys(pkg.dependencies)
 		: [],
 	plugins: [
-		commonjsPlugin({}),
 		nodeResolvePlugin({}),
-		jsonPlugin({}),
+		commonjsPlugin({
+			include: 'node_modules/**'
+		}),
+		jsonPlugin({
+			preferConst: true
+		}),
 		typescriptPlugin({
 			cacheRoot,
 
 			useTsconfigDeclarationDir: false,
 
 			tsconfigOverride: {
-				outDir: lib,
+				outDir: dist,
 				rootDir: src,
 				include: [src]
 			}
@@ -37,7 +41,7 @@ export default {
 	],
 	output: [
 		{
-			file: `${pkg.main}.js`,
+			file: pathJoin(dist, 'cleaner.js'),
 			format: 'cjs',
 			exports: 'named'
 		}
