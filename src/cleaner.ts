@@ -5,7 +5,10 @@ import { API } from 'vk-io';
 import { authMethods } from './auth';
 
 import {
-	commentsAction, IAction
+	IAction,
+
+	commentsAction,
+	likesAction
 } from './actions';
 
 import { reporter } from './reporter';
@@ -13,7 +16,8 @@ import { callbackService } from './callback-service';
 import { delay, getDirectories, formatDuration } from './helpers';
 
 const actions = {
-	commentsAction
+	commentsAction,
+	likesAction
 };
 
 async function run() {

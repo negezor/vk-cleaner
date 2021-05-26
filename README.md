@@ -2,13 +2,14 @@
 Clears your personal page using GDPR data.
 
 ## Features
-- Delete comments in posts, photos, videos and markets
+- Delete comments in wall, posts, photos, videos and markets
+- Delete likes in wall, posts, photos, videos and markets
 - Visual feedback to actions
 
 ## Requirement
 > **[Node.js](https://nodejs.org/) 14.0.0 or newer is required**
 
-> **[VK Archive](https://vk.com/data_protection?section=rules&scroll_to_archive=1) with comments**
+> **[VK Archive](https://vk.com/data_protection?section=rules&scroll_to_archive=1) with comments and likes**
 
 ## Simple usage
 
