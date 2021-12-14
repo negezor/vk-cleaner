@@ -1,6 +1,6 @@
 import { writeFileSync } from 'fs';
 
-import { API, APIErrorCode } from 'vk-io';
+import { API, APIError, APIErrorCode } from 'vk-io';
 import { DirectAuthorization, officialAppCredentials } from '@vk-io/authorization';
 
 import { reporter } from './reporter';
@@ -45,13 +45,13 @@ export const authMethods: IAuthMethod[] = [
 
 					return accessToken;
 				} catch (error) {
-					if (error.code === APIErrorCode.AUTH) {
+					if ((error as APIError).code === APIErrorCode.AUTH) {
 						reporter.error('Invalid access token');
 
 						continue;
 					}
 
-					reporter.error(`Another error: ${error.message}`);
+					reporter.error(`Another error: ${(error as Error).message}`);
 
 					continue;
 				}
