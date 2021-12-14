@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-promise-executor-return
 export const delay = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
 
 export const formatDuration = (rawMs: number): string => {
