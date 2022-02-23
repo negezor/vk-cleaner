@@ -18,7 +18,7 @@ export const authMethods: IAuthMethod[] = [
 		name: 'Access token',
 		value: AuthMethodType.AccessToken,
 		async handler(): Promise<string> {
-			reporter.info('You can get a token here: https://oauth.vk.com/authorize?client_id=3116505&scope=1073737727&redirect_uri=https://oauth.vk.com/blank.html&display=page&response_type=token&revoke=1');
+			reporter.info('You can get a token here: https://oauth.vk.com/authorize?client_id=6287487&scope=1073737727&redirect_uri=https://oauth.vk.com/blank.html&display=page&response_type=token&revoke=1');
 
 			// eslint-disable-next-line no-constant-condition
 			while (true) {
