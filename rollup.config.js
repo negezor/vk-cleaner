@@ -44,7 +44,8 @@ export default {
 			file: pathJoin(dist, 'cleaner.js'),
 			format: 'cjs',
 			exports: 'named',
-			banner: '#!/usr/bin/env node'
+			banner: '#!/usr/bin/env node',
+			inlineDynamicImports: true
 		}
 	]
 };
