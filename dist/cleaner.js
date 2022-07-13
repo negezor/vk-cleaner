@@ -83093,10 +83093,6 @@ const authMethods = [
                 const accessToken = await reporter.question('Write your token (required)', {
                     required: true
                 });
-                if (!/^[a-z\d]+$/.test(accessToken)) {
-                    reporter.warn('Invalid token format');
-                    continue;
-                }
                 const api = new API({
                     token: accessToken
                 });

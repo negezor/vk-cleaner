@@ -26,12 +26,6 @@ export const authMethods: IAuthMethod[] = [
 					required: true
 				});
 
-				if (!/^[a-z\d]+$/.test(accessToken)) {
-					reporter.warn('Invalid token format');
-
-					continue;
-				}
-
 				const api = new API({
 					token: accessToken
 				});
