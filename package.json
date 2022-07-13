@@ -44,12 +44,12 @@
 		"typescript": "^4.7.4"
 	},
 	"scripts": {
-		"prepare": "yarn run rollup:build && yarn run test",
-		"build": "NODE_ENV=production yarn run rollup:build",
-		"watch": "yarn run rollup:watch",
+		"prepare": "npm run rollup:build && npm run test",
+		"build": "NODE_ENV=production npm run rollup:build",
+		"watch": "npm run rollup:watch",
 		"rollup:build": "rollup -c",
-		"rollup:watch": "yarn run rollup:build --watch",
-		"test": "yarn run test:jest && yarn run test:eslint",
+		"rollup:watch": "npm run rollup:build --watch",
+		"test": "npm run test:jest && npm run test:eslint",
 		"test:jest": "jest --config jest.config.json --no-cache",
 		"test:eslint": "eslint --ext .ts --ignore-path .gitignore src/**/*.ts"
 	}

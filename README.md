@@ -35,7 +35,7 @@ Clears your personal page using GDPR data.
 ```sh
 git clone https://github.com/negezor/vk-cleaner.git
 cd vk-cleaner
-yarn install
-yarn build
+npm run install
+npm run build
 node dist/cleaner.js
 ```
