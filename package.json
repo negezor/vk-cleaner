@@ -16,7 +16,7 @@
     "bugs": "https://github.com/negezor/vk-cleaner/issues",
     "main": "dist/cleaner.js",
     "engines": {
-        "node": ">=14.0.0"
+        "node": ">=20.0.0"
     },
     "type": "module",
     "dependencies": {
