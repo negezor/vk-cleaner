@@ -24,8 +24,7 @@
         "@vk-io/authorization": "^1.4.1",
         "common-tags": "^1.8.2",
         "htmlparser2": "^9.1.0",
-        "vk-io": "^4.9.1",
-        "yurnalist": "^2.1.0"
+        "vk-io": "^4.9.1"
     },
     "devDependencies": {
         "@biomejs/biome": "^1.6.4",
