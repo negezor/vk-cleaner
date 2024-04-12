@@ -12,172 +12,172 @@ import { formatDuration, getFiles } from '../helpers';
 import { reporter } from '../reporter';
 
 export interface IDeleteCommentOptions {
-	type: 'market' | 'photo' | 'video' | 'wall';
+    type: 'market' | 'photo' | 'video' | 'wall';
 
-	ownerId: number;
-	commentId: number;
+    ownerId: number;
+    commentId: number;
 }
 
 const deleteComment = (api: API, options: IDeleteCommentOptions) => {
-	const { type, ownerId, commentId } = options;
+    const { type, ownerId, commentId } = options;
 
-	const params = {
-		comment_id: commentId,
-		owner_id: ownerId
-	};
+    const params = {
+        comment_id: commentId,
+        owner_id: ownerId
+    };
 
-	if (type === 'photo') {
-		return api.photos.deleteComment(params);
-	}
+    if (type === 'photo') {
+        return api.photos.deleteComment(params);
+    }
 
-	if (type === 'video') {
-		return api.video.deleteComment(params);
-	}
+    if (type === 'video') {
+        return api.video.deleteComment(params);
+    }
 
-	if (type === 'market') {
-		return api.market.deleteComment(params);
-	}
+    if (type === 'market') {
+        return api.market.deleteComment(params);
+    }
 
-	if (type === 'wall') {
-		return api.wall.deleteComment(params);
-	}
+    if (type === 'wall') {
+        return api.wall.deleteComment(params);
+    }
 
-	throw new Error('Unsupported type for delete comment');
+    throw new Error('Unsupported type for delete comment');
 };
 
 const allowResourceTypes = new Set([
-	'market',
-	'photo',
-	'video',
-	'wall'
+    'market',
+    'photo',
+    'video',
+    'wall'
 ]);
 
 export const commentsAction: IAction = {
-	value: 'DELETE_COMMENTS',
+    value: 'DELETE_COMMENTS',
 
-	name: 'Delete comments',
-	description: 'Deletes your comments',
+    name: 'Delete comments',
+    description: 'Deletes your comments',
 
-	async canRun({ archiveFolders }) {
-		return archiveFolders.includes('comments');
-	},
+    async canRun({ archiveFolders }) {
+        return archiveFolders.includes('comments');
+    },
 
-	async handler({ api, archivePath }) {
-		const commentsPath = pathJoin(archivePath, 'comments');
+    async handler({ api, archivePath }) {
+        const commentsPath = pathJoin(archivePath, 'comments');
 
-		const htmlFilePaths = getFiles(commentsPath)
-			.filter(filename => filename.endsWith('.html'))
-			.map(filename => pathJoin(commentsPath, filename));
+        const htmlFilePaths = getFiles(commentsPath)
+            .filter(filename => filename.endsWith('.html'))
+            .map(filename => pathJoin(commentsPath, filename));
 
-		const commentsForDelete: IDeleteCommentOptions[] = [];
+        const commentsForDelete: IDeleteCommentOptions[] = [];
 
-		const parseCompletedChain = Promise.resolve();
+        const parseCompletedChain = Promise.resolve();
 
-		const checkFilesTick = reporter.progress(htmlFilePaths.length);
+        const checkFilesTick = reporter.progress(htmlFilePaths.length);
 
-		reporter.info(`Start parsing comment files. Number of files to check: ${htmlFilePaths.length}`);
+        reporter.info(`Start parsing comment files. Number of files to check: ${htmlFilePaths.length}`);
 
-		for (const htmlFilePath of htmlFilePaths) {
-			const htmlFileStream = createReadStream(htmlFilePath);
+        for (const htmlFilePath of htmlFilePaths) {
+            const htmlFileStream = createReadStream(htmlFilePath);
 
-			const htmlParserStream = new HTMLParserStream({
-				onopentag(name, attributes) {
-					if (name !== 'a') {
-						return;
-					}
+            const htmlParserStream = new HTMLParserStream({
+                onopentag(name, attributes) {
+                    if (name !== 'a') {
+                        return;
+                    }
 
-					if (!attributes.href || !attributes.href.startsWith('http')) {
-						return;
-					}
+                    if (!attributes.href || !attributes.href.startsWith('http')) {
+                        return;
+                    }
 
-					const url = new URL(attributes.href);
+                    const url = new URL(attributes.href);
 
-					const commentId = url.searchParams.get('reply');
+                    const commentId = url.searchParams.get('reply');
 
-					if (!commentId) {
-						return;
-					}
+                    if (!commentId) {
+                        return;
+                    }
 
-					const resolvePromise = resolveResource({
-						api,
+                    const resolvePromise = resolveResource({
+                        api,
 
-						resource: attributes.href
-					});
+                        resource: attributes.href
+                    });
 
-					parseCompletedChain.then(async () => {
-						const resouce = await resolvePromise;
+                    parseCompletedChain.then(async () => {
+                        const resouce = await resolvePromise;
 
-						if (!allowResourceTypes.has(resouce.type)) {
-							return;
-						}
+                        if (!allowResourceTypes.has(resouce.type)) {
+                            return;
+                        }
 
-						commentsForDelete.push({
-							commentId: Number(commentId),
-							// @ts-expect-error ts...
-							ownerId: resouce.ownerId,
-							type: resouce.type as IDeleteCommentOptions['type']
-						});
-					});
-				}
-			});
+                        commentsForDelete.push({
+                            commentId: Number(commentId),
+                            // @ts-expect-error ts...
+                            ownerId: resouce.ownerId,
+                            type: resouce.type as IDeleteCommentOptions['type']
+                        });
+                    });
+                }
+            });
 
-			const parserStream = htmlFileStream.pipe(htmlParserStream);
+            const parserStream = htmlFileStream.pipe(htmlParserStream);
 
-			await once(parserStream, 'finish');
-			// It can resolve before the stream ends
-			await parseCompletedChain;
+            await once(parserStream, 'finish');
+            // It can resolve before the stream ends
+            await parseCompletedChain;
 
-			checkFilesTick();
-		}
+            checkFilesTick();
+        }
 
-		reporter.info('End parsing comment files');
+        reporter.info('End parsing comment files');
 
-		if (commentsForDelete.length === 0) {
-			reporter.info('You have no comments to delete');
+        if (commentsForDelete.length === 0) {
+            reporter.info('You have no comments to delete');
 
-			return;
-		}
+            return;
+        }
 
-		reporter.info(stripIndents`
-			You wrote ${commentsForDelete.length} comments
+        reporter.info(stripIndents`
+            You wrote ${commentsForDelete.length} comments
 
-			It will take approximately ${formatDuration(commentsForDelete.length * 1.2 * 1000)} to delete comments
-		`);
+            It will take approximately ${formatDuration(commentsForDelete.length * 1.2 * 1000)} to delete comments
+        `);
 
-		const deleteCommentsTick = reporter.progress(commentsForDelete.length);
+        const deleteCommentsTick = reporter.progress(commentsForDelete.length);
 
-		let failedDeleteComments = 0;
+        let failedDeleteComments = 0;
 
-		await Promise.all(commentsForDelete.map(async (comment) => {
-			let retries = 0;
+        await Promise.all(commentsForDelete.map(async (comment) => {
+            let retries = 0;
 
-			while (true) {
-				if (retries === 3) {
-					failedDeleteComments += 1;
+            while (true) {
+                if (retries === 3) {
+                    failedDeleteComments += 1;
 
-					break;
-				}
+                    break;
+                }
 
-				try {
-					await deleteComment(api, comment);
+                try {
+                    await deleteComment(api, comment);
 
-					break;
-				} catch (error) {
-					retries += 1;
+                    break;
+                } catch (error) {
+                    retries += 1;
 
-					if (process.env.DEBUG) {
+                    if (process.env.DEBUG) {
 
-						console.error('Failed delete comment', error);
-					}
-				}
-			}
+                        console.error('Failed delete comment', error);
+                    }
+                }
+            }
 
-			deleteCommentsTick();
-		}));
+            deleteCommentsTick();
+        }));
 
-		reporter.info(stripIndents`
-			Comments deleted: ${commentsForDelete.length - failedDeleteComments}
-			Delete failed: ${failedDeleteComments}
-		`);
-	}
+        reporter.info(stripIndents`
+            Comments deleted: ${commentsForDelete.length - failedDeleteComments}
+            Delete failed: ${failedDeleteComments}
+        `);
+    }
 };

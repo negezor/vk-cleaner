@@ -5,10 +5,10 @@ import { API } from 'vk-io';
 import { authMethods } from './auth';
 
 import {
-	type IAction,
+    type IAction,
 
-	commentsAction,
-	likesAction
+    commentsAction,
+    likesAction
 } from './actions';
 
 import { reporter } from './reporter';
@@ -16,191 +16,191 @@ import { callbackService } from './callback-service';
 import { delay, getDirectories, formatDuration } from './helpers';
 
 const actions = {
-	commentsAction,
-	likesAction
+    commentsAction,
+    likesAction
 };
 
 async function run() {
-	reporter.info(stripIndents`
-		Hello! This is a setup wizard for cleaning VK.
-		We need a few things to get started.
-	`);
+    reporter.info(stripIndents`
+        Hello! This is a setup wizard for cleaning VK.
+        We need a few things to get started.
+    `);
 
-	process.stdout.write('\n');
+    process.stdout.write('\n');
 
-	let archivePath = `${process.cwd()}/Archive`;
-	if (!existsSync(archivePath)) {
-		const listFolders = getDirectories(process.cwd());
+    let archivePath = `${process.cwd()}/Archive`;
+    if (!existsSync(archivePath)) {
+        const listFolders = getDirectories(process.cwd());
 
-		if (listFolders.length === 0) {
-			reporter.error('We didn\'t find the Archive folder or others');
+        if (listFolders.length === 0) {
+            reporter.error('We didn\'t find the Archive folder or others');
 
-			return;
-		}
+            return;
+        }
 
-		archivePath = await reporter.prompt(
-			'We didn\'t find the Archive folder, which folder did you unpack to?',
-			listFolders,
-			{
-				type: 'list'
-			}
-		) as unknown as string;
+        archivePath = await reporter.prompt(
+            'We didn\'t find the Archive folder, which folder did you unpack to?',
+            listFolders,
+            {
+                type: 'list'
+            }
+        ) as unknown as string;
 
-		archivePath = `${process.cwd()}/${archivePath}`;
-	}
+        archivePath = `${process.cwd()}/${archivePath}`;
+    }
 
-	const archiveFolders = getDirectories(archivePath);
+    const archiveFolders = getDirectories(archivePath);
 
-	if (archiveFolders.length === 0) {
-		reporter.error('Archive is empty');
+    if (archiveFolders.length === 0) {
+        reporter.error('Archive is empty');
 
-		return;
-	}
+        return;
+    }
 
-	const authMethodValue = await reporter.prompt(
-		'Select an authorization method',
-		authMethods,
-		{
-			name: 'name',
-			type: 'list'
-		}
-	) as unknown as string;
+    const authMethodValue = await reporter.prompt(
+        'Select an authorization method',
+        authMethods,
+        {
+            name: 'name',
+            type: 'list'
+        }
+    ) as unknown as string;
 
-	const authMethod = authMethods.find(item => (
-		item.value === authMethodValue
-	));
+    const authMethod = authMethods.find(item => (
+        item.value === authMethodValue
+    ));
 
-	if (!authMethod) {
-		reporter.error(`Unsupported ${authMethodValue} auth method`);
+    if (!authMethod) {
+        reporter.error(`Unsupported ${authMethodValue} auth method`);
 
-		process.exit(0);
-	}
+        process.exit(0);
+    }
 
-	const accessToken = await authMethod.handler();
+    const accessToken = await authMethod.handler();
 
-	reporter.info('Successful auth');
+    reporter.info('Successful auth');
 
-	await delay(500);
+    await delay(500);
 
-	const api = new API({
-		callbackService,
+    const api = new API({
+        callbackService,
 
-		token: accessToken
-	});
+        token: accessToken
+    });
 
-	const rawSupportedActions = await Promise.all(
-		Object.values(actions)
-			.map(async (action) => {
-				const supported = await action.canRun({
-					archivePath,
-					archiveFolders,
+    const rawSupportedActions = await Promise.all(
+        Object.values(actions)
+            .map(async (action) => {
+                const supported = await action.canRun({
+                    archivePath,
+                    archiveFolders,
 
-					api
-				});
+                    api
+                });
 
-				if (!supported) {
-					return undefined;
-				}
+                if (!supported) {
+                    return undefined;
+                }
 
-				return action;
-			})
-	);
+                return action;
+            })
+    );
 
-	const supportedActions = rawSupportedActions.filter(Boolean)  as IAction[];
+    const supportedActions = rawSupportedActions.filter(Boolean)  as IAction[];
 
-	if (supportedActions.length === 0) {
-		reporter.warn('No supported cleaning methods found');
+    if (supportedActions.length === 0) {
+        reporter.warn('No supported cleaning methods found');
 
-		return;
-	}
+        return;
+    }
 
-	const selectedActionValues = await reporter.prompt(
-		'Select the things you want to clean',
-		supportedActions.map(action => ({
-			...action,
+    const selectedActionValues = await reporter.prompt(
+        'Select the things you want to clean',
+        supportedActions.map(action => ({
+            ...action,
 
-			name: `${action.name} — ${action.description}`
-		})),
-		{
-			name: 'name',
-			type: 'checkbox'
-		}
-	);
+            name: `${action.name} — ${action.description}`
+        })),
+        {
+            name: 'name',
+            type: 'checkbox'
+        }
+    );
 
-	const selectedActions = Object.values(actions)
-		.filter(action => (
-			selectedActionValues.includes(action.value)
-		));
+    const selectedActions = Object.values(actions)
+        .filter(action => (
+            selectedActionValues.includes(action.value)
+        ));
 
-	if (selectedActions.length === 0) {
-		reporter.warn('You have not selected any actions');
+    if (selectedActions.length === 0) {
+        reporter.warn('You have not selected any actions');
 
-		return;
-	}
+        return;
+    }
 
-	const actionsForConfirm = selectedActions
-		.map(action => (
-			`- ${action.name} — ${action.description}`
-		))
-		.join('\n');
+    const actionsForConfirm = selectedActions
+        .map(action => (
+            `- ${action.name} — ${action.description}`
+        ))
+        .join('\n');
 
-	const confirmed = await reporter.prompt(
-		stripIndents`
-			Are you sure you want to run these actions?
+    const confirmed = await reporter.prompt(
+        stripIndents`
+            Are you sure you want to run these actions?
 
-			${actionsForConfirm}
+            ${actionsForConfirm}
 
-			THESE ACTIONS ARE IRREVERSIBLE!
-		`,
-		[],
-		{
-			type: 'confirm'
-		}
-	);
+            THESE ACTIONS ARE IRREVERSIBLE!
+        `,
+        [],
+        {
+            type: 'confirm'
+        }
+    );
 
-	if (!confirmed) {
-		reporter.success('Have a nice day!');
+    if (!confirmed) {
+        reporter.success('Have a nice day!');
 
-		return;
-	}
+        return;
+    }
 
-	await delay(3000);
+    await delay(3000);
 
-	for (const action of selectedActions) {
-		reporter.info(`Start ${action.name.toLowerCase()}`);
+    for (const action of selectedActions) {
+        reporter.info(`Start ${action.name.toLowerCase()}`);
 
-		const startAt = Date.now();
+        const startAt = Date.now();
 
-		try {
-			await action.handler({
-				archivePath,
-				archiveFolders,
+        try {
+            await action.handler({
+                archivePath,
+                archiveFolders,
 
-				api
-			});
+                api
+            });
 
-			const tookTime = formatDuration(Date.now() - startAt);
+            const tookTime = formatDuration(Date.now() - startAt);
 
-			reporter.info(`End ${action.name.toLowerCase()}, took time ${tookTime}`);
-		} catch (error) {
-			reporter.error(`An error occurred while performing actions — ${action.name}`);
+            reporter.info(`End ${action.name.toLowerCase()}, took time ${tookTime}`);
+        } catch (error) {
+            reporter.error(`An error occurred while performing actions — ${action.name}`);
 
-			console.log(error);
-		}
-	}
+            console.log(error);
+        }
+    }
 
-	reporter.success('Completed!');
+    reporter.success('Completed!');
 
-	process.exit(0);
+    process.exit(0);
 }
 
 run().catch((error) => {
-	// Ignore exit from process with active prompt
-	if (error.message === 'canceled') {
-		return;
-	}
+    // Ignore exit from process with active prompt
+    if (error.message === 'canceled') {
+        return;
+    }
 
-	console.error(error);
+    console.error(error);
 
-	process.exit(1);
+    process.exit(1);
 });

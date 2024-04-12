@@ -1,4 +1,4 @@
 export enum AuthMethodType {
-	AccessToken = 'ACCESS_TOKEN',
-	Credential = 'CREDENTIAL'
+    AccessToken = 'ACCESS_TOKEN',
+    Credential = 'CREDENTIAL'
 }

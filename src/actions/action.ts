@@ -1,26 +1,26 @@
 import type { API } from 'vk-io';
 
 export interface IActionCanRunOptions {
-	archivePath: string;
-	archiveFolders: string[];
+    archivePath: string;
+    archiveFolders: string[];
 
-	api: API;
+    api: API;
 }
 
 export interface IActionHandlerOptions {
-	archivePath: string;
-	archiveFolders: string[];
+    archivePath: string;
+    archiveFolders: string[];
 
-	api: API;
+    api: API;
 }
 
 export interface IAction {
-	value: string;
+    value: string;
 
-	name: string;
-	description: string;
+    name: string;
+    description: string;
 
-	canRun(options: IActionCanRunOptions): Promise<boolean>;
+    canRun(options: IActionCanRunOptions): Promise<boolean>;
 
-	handler(options: IActionHandlerOptions): Promise<void>;
+    handler(options: IActionHandlerOptions): Promise<void>;
 }

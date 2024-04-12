@@ -10,7 +10,7 @@
         "formatter": {
             "quoteStyle": "single",
             "semicolons": "always",
-			"arrowParentheses": "asNeeded"
+            "arrowParentheses": "asNeeded"
         }
     },
     "files": {

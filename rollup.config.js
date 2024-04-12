@@ -16,37 +16,37 @@ const src = pathJoin(__dirname, 'src');
 const dist = pathJoin(__dirname, 'dist');
 
 export default defineConfig({
-	input: pathJoin(src, 'index.ts'),
-	external: process.env.NODE_ENV !== 'production'
-		? Object.keys(pkg.dependencies)
-		: [],
-	plugins: [
-		nodeResolvePlugin({}),
-		commonjsPlugin({
-			include: 'node_modules/**'
-		}),
-		jsonPlugin({
-			preferConst: true
-		}),
-		typescriptPlugin({
-			cacheRoot,
+    input: pathJoin(src, 'index.ts'),
+    external: process.env.NODE_ENV !== 'production'
+        ? Object.keys(pkg.dependencies)
+        : [],
+    plugins: [
+        nodeResolvePlugin({}),
+        commonjsPlugin({
+            include: 'node_modules/**'
+        }),
+        jsonPlugin({
+            preferConst: true
+        }),
+        typescriptPlugin({
+            cacheRoot,
 
-			useTsconfigDeclarationDir: false,
+            useTsconfigDeclarationDir: false,
 
-			tsconfigOverride: {
-				outDir: dist,
-				rootDir: src,
-				include: [src]
-			}
-		})
-	],
-	output: [
-		{
-			file: pathJoin(dist, 'cleaner.js'),
-			format: 'cjs',
-			exports: 'named',
-			banner: '#!/usr/bin/env node',
-			inlineDynamicImports: true
-		}
-	]
+            tsconfigOverride: {
+                outDir: dist,
+                rootDir: src,
+                include: [src]
+            }
+        })
+    ],
+    output: [
+        {
+            file: pathJoin(dist, 'cleaner.js'),
+            format: 'cjs',
+            exports: 'named',
+            banner: '#!/usr/bin/env node',
+            inlineDynamicImports: true
+        }
+    ]
 });
