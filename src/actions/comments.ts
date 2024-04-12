@@ -74,7 +74,7 @@ export const commentsAction: IAction = {
 
             process.stdout.clearLine(0);
             process.stdout.cursorTo(0);
-            process.stdout.write(`Progress ${deleteCommentsTicks}/${htmlFilePaths.length}`);
+            process.stdout.write(`Progress ${checkFilesTickTicks}/${htmlFilePaths.length}`);
         };
 
         console.info(`Start parsing comment files. Number of files to check: ${htmlFilePaths.length}`);
