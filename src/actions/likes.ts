@@ -121,6 +121,7 @@ export const likesAction: IAction = {
             checkFilesTick();
         }
 
+        console.log();
         console.info('End parsing like files');
 
         if (likesForDelete.length === 0) {
@@ -176,6 +177,7 @@ export const likesAction: IAction = {
             deleteLikesTick();
         }
 
+        console.log();
         console.info(stripIndents`
             Likes deleted: ${likesForDelete.length - failedDeleteLikes}
             Delete failed: ${failedDeleteLikes}

@@ -132,6 +132,7 @@ export const commentsAction: IAction = {
             checkFilesTick();
         }
 
+        console.log();
         console.info('End parsing comment files');
 
         if (commentsForDelete.length === 0) {
@@ -186,6 +187,7 @@ export const commentsAction: IAction = {
             }),
         );
 
+        console.log();
         console.info(stripIndents`
             Comments deleted: ${commentsForDelete.length - failedDeleteComments}
             Delete failed: ${failedDeleteComments}
