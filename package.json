@@ -31,7 +31,6 @@
         "@rollup/plugin-commonjs": "^22.0.1",
         "@rollup/plugin-json": "^4.1.0",
         "@rollup/plugin-node-resolve": "^13.3.0",
-        "babel-runtime": "^6.26.0",
         "rollup": "^2.76.0",
         "rollup-plugin-typescript2": "^0.32.1",
         "tsx": "^4.7.2",
