@@ -9,7 +9,6 @@ import { join as pathJoin } from 'node:path';
 import type { IAction } from './action';
 
 import { delay, formatDuration, getDirectories, getFiles } from '../helpers';
-import { reporter } from '../reporter';
 
 export interface IDeleteLikeOptions {
     type: Objects.LikesType;
@@ -65,9 +64,17 @@ export const likesAction: IAction = {
 
         const parseCompletedChain = Promise.resolve();
 
-        const checkFilesTick = reporter.progress(htmlFilePaths.length);
+        let checkFilesTicks = 0;
 
-        reporter.info(`Start parsing like files. Number of files to check: ${htmlFilePaths.length}`);
+        const checkFilesTick = () => {
+            checkFilesTicks += 1;
+
+            process.stdout.clearLine(0);
+            process.stdout.cursorTo(0);
+            process.stdout.write(`Progress ${checkFilesTicks}/${htmlFilePaths.length}`);
+        };
+
+        console.info(`Start parsing like files. Number of files to check: ${htmlFilePaths.length}`);
 
         for (const htmlFilePath of htmlFilePaths) {
             const htmlFileStream = createReadStream(htmlFilePath);
@@ -114,21 +121,30 @@ export const likesAction: IAction = {
             checkFilesTick();
         }
 
-        reporter.info('End parsing like files');
+        console.info('End parsing like files');
 
         if (likesForDelete.length === 0) {
-            reporter.info('You have no likes to delete');
+            console.info('You have no likes to delete');
 
             return;
         }
 
-        reporter.info(stripIndents`
+        console.info(stripIndents`
             You like ${likesForDelete.length} items
 
             It will take approximately ${formatDuration(likesForDelete.length * 1.2 * 1000)} to delete likes
         `);
 
-        const deleteLikesTick = reporter.progress(likesForDelete.length);
+        let deleteLikesTicks = 0;
+
+        const deleteLikesTick = () => {
+            deleteLikesTicks += 1;
+
+            process.stdout.clearLine(0);
+            process.stdout.cursorTo(0);
+            process.stdout.write(`Progress ${deleteLikesTicks}/${likesForDelete.length}`);
+        };
+
 
         let failedDeleteLikes = 0;
 
@@ -160,7 +176,7 @@ export const likesAction: IAction = {
             deleteLikesTick();
         }
 
-        reporter.info(stripIndents`
+        console.info(stripIndents`
             Likes deleted: ${likesForDelete.length - failedDeleteLikes}
             Delete failed: ${failedDeleteLikes}
         `);

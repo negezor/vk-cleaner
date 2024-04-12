@@ -1,6 +1,8 @@
-import { existsSync } from 'node:fs';
+import { checkbox, confirm, select } from '@inquirer/prompts';
 import { stripIndents } from 'common-tags';
 import { API } from 'vk-io';
+
+import { existsSync } from 'node:fs';
 
 import { authMethods } from './auth';
 
@@ -8,7 +10,6 @@ import { type IAction, commentsAction, likesAction } from './actions';
 
 import { callbackService } from './callback-service';
 import { delay, formatDuration, getDirectories } from './helpers';
-import { reporter } from './reporter';
 
 const actions = {
     commentsAction,
@@ -16,7 +17,7 @@ const actions = {
 };
 
 async function run() {
-    reporter.info(stripIndents`
+    console.info(stripIndents`
         Hello! This is a setup wizard for cleaning VK.
         We need a few things to get started.
     `);
@@ -28,18 +29,17 @@ async function run() {
         const listFolders = getDirectories(process.cwd());
 
         if (listFolders.length === 0) {
-            reporter.error("We didn't find the Archive folder or others");
+            console.error("We didn't find the Archive folder or others");
 
             return;
         }
 
-        archivePath = (await reporter.prompt(
-            "We didn't find the Archive folder, which folder did you unpack to?",
-            listFolders,
-            {
-                type: 'list',
-            },
-        )) as unknown as string;
+        archivePath = await select({
+            message: "We didn't find the Archive folder, which folder did you unpack to?",
+            choices: listFolders.map(folder => ({
+                value: folder,
+            })),
+        });
 
         archivePath = `${process.cwd()}/${archivePath}`;
     }
@@ -47,27 +47,27 @@ async function run() {
     const archiveFolders = getDirectories(archivePath);
 
     if (archiveFolders.length === 0) {
-        reporter.error('Archive is empty');
+        console.error('Archive is empty');
 
         return;
     }
 
-    const authMethodValue = (await reporter.prompt('Select an authorization method', authMethods, {
-        name: 'name',
-        type: 'list',
-    })) as unknown as string;
+    const authMethodValue = await select({
+        message: 'Select an authorization method',
+        choices: authMethods,
+    });
 
     const authMethod = authMethods.find(item => item.value === authMethodValue);
 
     if (!authMethod) {
-        reporter.error(`Unsupported ${authMethodValue} auth method`);
+        console.error(`Unsupported ${authMethodValue} auth method`);
 
         process.exit(0);
     }
 
     const accessToken = await authMethod.handler();
 
-    reporter.info('Successful auth');
+    console.info('Successful auth');
 
     await delay(500);
 
@@ -97,50 +97,42 @@ async function run() {
     const supportedActions = rawSupportedActions.filter(Boolean) as IAction[];
 
     if (supportedActions.length === 0) {
-        reporter.warn('No supported cleaning methods found');
+        console.warn('No supported cleaning methods found');
 
         return;
     }
 
-    const selectedActionValues = await reporter.prompt(
-        'Select the things you want to clean',
-        supportedActions.map(action => ({
+    const selectedActionValues = await checkbox({
+        message: 'Select the things you want to clean',
+        choices: supportedActions.map(action => ({
             ...action,
 
             name: `${action.name} — ${action.description}`,
-        })),
-        {
-            name: 'name',
-            type: 'checkbox',
-        },
-    );
+        }))
+    });
 
     const selectedActions = Object.values(actions).filter(action => selectedActionValues.includes(action.value));
 
     if (selectedActions.length === 0) {
-        reporter.warn('You have not selected any actions');
+        console.warn('You have not selected any actions');
 
         return;
     }
 
     const actionsForConfirm = selectedActions.map(action => `- ${action.name} — ${action.description}`).join('\n');
 
-    const confirmed = await reporter.prompt(
-        stripIndents`
+    const confirmed = await confirm({
+        message: stripIndents`
             Are you sure you want to run these actions?
 
             ${actionsForConfirm}
 
             THESE ACTIONS ARE IRREVERSIBLE!
         `,
-        [],
-        {
-            type: 'confirm',
-        },
-    );
+    });
 
     if (!confirmed) {
-        reporter.success('Have a nice day!');
+        console.info('Have a nice day!');
 
         return;
     }
@@ -148,7 +140,7 @@ async function run() {
     await delay(3000);
 
     for (const action of selectedActions) {
-        reporter.info(`Start ${action.name.toLowerCase()}`);
+        console.info(`Start ${action.name.toLowerCase()}`);
 
         const startAt = Date.now();
 
@@ -162,15 +154,15 @@ async function run() {
 
             const tookTime = formatDuration(Date.now() - startAt);
 
-            reporter.info(`End ${action.name.toLowerCase()}, took time ${tookTime}`);
+            console.info(`End ${action.name.toLowerCase()}, took time ${tookTime}`);
         } catch (error) {
-            reporter.error(`An error occurred while performing actions — ${action.name}`);
+            console.error(`An error occurred while performing actions — ${action.name}`);
 
             console.log(error);
         }
     }
 
-    reporter.success('Completed!');
+    console.info('Completed!');
 
     process.exit(0);
 }

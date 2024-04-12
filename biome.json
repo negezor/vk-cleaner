@@ -12,10 +12,5 @@
             "semicolons": "always",
             "arrowParentheses": "asNeeded"
         }
-    },
-    "files": {
-        "ignore": [
-            "*.d.ts"
-        ]
     }
 }

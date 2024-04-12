@@ -9,7 +9,6 @@ import { join as pathJoin } from 'node:path';
 import type { IAction } from './action';
 
 import { formatDuration, getFiles } from '../helpers';
-import { reporter } from '../reporter';
 
 export interface IDeleteCommentOptions {
     type: 'market' | 'photo' | 'video' | 'wall';
@@ -68,9 +67,17 @@ export const commentsAction: IAction = {
 
         const parseCompletedChain = Promise.resolve();
 
-        const checkFilesTick = reporter.progress(htmlFilePaths.length);
+        let checkFilesTickTicks = 0;
 
-        reporter.info(`Start parsing comment files. Number of files to check: ${htmlFilePaths.length}`);
+        const checkFilesTick = () => {
+            checkFilesTickTicks += 1;
+
+            process.stdout.clearLine(0);
+            process.stdout.cursorTo(0);
+            process.stdout.write(`Progress ${deleteCommentsTicks}/${htmlFilePaths.length}`);
+        };
+
+        console.info(`Start parsing comment files. Number of files to check: ${htmlFilePaths.length}`);
 
         for (const htmlFilePath of htmlFilePaths) {
             const htmlFileStream = createReadStream(htmlFilePath);
@@ -125,21 +132,29 @@ export const commentsAction: IAction = {
             checkFilesTick();
         }
 
-        reporter.info('End parsing comment files');
+        console.info('End parsing comment files');
 
         if (commentsForDelete.length === 0) {
-            reporter.info('You have no comments to delete');
+            console.info('You have no comments to delete');
 
             return;
         }
 
-        reporter.info(stripIndents`
+        console.info(stripIndents`
             You wrote ${commentsForDelete.length} comments
 
             It will take approximately ${formatDuration(commentsForDelete.length * 1.2 * 1000)} to delete comments
         `);
 
-        const deleteCommentsTick = reporter.progress(commentsForDelete.length);
+        let deleteCommentsTicks = 0;
+
+        const deleteCommentsTick = () => {
+            deleteCommentsTicks += 1;
+
+            process.stdout.clearLine(0);
+            process.stdout.cursorTo(0);
+            process.stdout.write(`Progress ${deleteCommentsTicks}/${commentsForDelete.length}`);
+        };
 
         let failedDeleteComments = 0;
 
@@ -171,7 +186,7 @@ export const commentsAction: IAction = {
             }),
         );
 
-        reporter.info(stripIndents`
+        console.info(stripIndents`
             Comments deleted: ${commentsForDelete.length - failedDeleteComments}
             Delete failed: ${failedDeleteComments}
         `);
