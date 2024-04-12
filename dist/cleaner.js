@@ -52,7 +52,7 @@ var zlib__default = /*#__PURE__*/_interopDefaultLegacy(zlib);
 var Stream__default = /*#__PURE__*/_interopDefaultLegacy(Stream);
 
 process.on('uncaughtException', (error) => {
-    // eslint-disable-next-line no-console
+
     console.error('Caught exception', error);
 });
 
@@ -1020,7 +1020,6 @@ function requireBrowser () {
 		 * TODO: add a `localStorage` variable to explicitly enable/disable colors
 		 */
 
-		// eslint-disable-next-line complexity
 		function useColors() {
 			// NB: In an Electron preload script, document will be defined but not fully
 			// initialized. Since we know we're in Chrome, we'll just detect this case
@@ -1377,7 +1376,7 @@ function requireNode () {
 
 		try {
 			// Optional dependency (as in, doesn't need to be installed, NOT like optionalDependencies in package.json)
-			// eslint-disable-next-line import/no-extraneous-dependencies
+
 			const supportsColor = requireSupportsColor$1();
 
 			if (supportsColor && (supportsColor.stderr || supportsColor).level >= 2) {
@@ -3410,7 +3409,7 @@ const getEnforceMiddleware = (beforeMiddleware, middleware, afterMiddleware) => 
     if (!middlewareCalled) {
         return;
     }
-    // eslint-disable-next-line consistent-return
+
     return afterMiddleware(context, next);
 });
 /**
@@ -5305,7 +5304,7 @@ class APIRequest {
     /**
      * Sends a request to the server
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     async make() {
         const { options } = this.api;
         const params = {
@@ -5385,7 +5384,7 @@ class ParallelWorker extends SequentialWorker {
             }
         }
     }
-    // eslint-disable-next-line class-methods-use-this
+
     skipMethod(method) {
         return method.startsWith('execute')
             || this.api.options.apiExecuteUnsupportedMethods.includes(method);
@@ -5476,7 +5475,7 @@ class API {
             apiRetryLimit: 3,
             apiTimeout: 10e3,
             apiHeaders: {
-                // eslint-disable-next-line @typescript-eslint/naming-convention
+
                 'User-Agent': `vk-io/${version$1} (+https://github.com/negezor/vk-io)`
             },
             apiExecuteCount: 25,
@@ -5498,10 +5497,10 @@ class API {
             ...options
         };
         for (const group of groupMethods) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
             // @ts-ignore
             this[group] = new Proxy(Object.create(null), {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
                 get: (obj, prop) => (params) => (this.callWithRequest(new APIRequest({
                     api: this,
                     method: `${group}.${prop}`,
@@ -5520,21 +5519,21 @@ class API {
     /**
      * Call execute method
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     execute(params) {
         return this.call('execute', params);
     }
     /**
      * Call execute procedure
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     procedure(name, params) {
         return this.call(`execute.${name}`, params);
     }
     /**
      * Call raw method
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     call(method, params) {
         return this.callWithRequest(new APIRequest({
             method,
@@ -5545,7 +5544,7 @@ class API {
     /**
      * Adds request for queue
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     callWithRequest(request) {
         this.worker.enqueue(request);
         return request.promise;
@@ -5683,7 +5682,7 @@ class Attachment {
     /**
      * Can be attached via string representation
      */
-    // eslint-disable-next-line class-methods-use-this
+
     get canBeAttached() {
         return true;
     }
@@ -5757,7 +5756,7 @@ class ExternalAttachment {
     /**
      * Can be attached via string representation
      */
-    // eslint-disable-next-line class-methods-use-this
+
     get canBeAttached() {
         return false;
     }
@@ -7789,7 +7788,7 @@ class Context$1 {
      * Returns the custom data
      */
     [kSerializeData]() {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
         const { api, upload, ...payload } = this;
         return payload;
     }
@@ -8213,7 +8212,7 @@ class CommentContext extends Context$1 {
     /**
      * Returns the likes
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     get likes() {
         return this.payload.likes;
     }
@@ -8226,7 +8225,7 @@ class CommentContext extends Context$1 {
     /**
      * Edits a comment
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     editComment(options) {
         if (this.isDelete) {
             return Promise.reject(new VKError({
@@ -8348,7 +8347,7 @@ const idToAttachmentPayload = (key) => {
     };
 };
 const attachmentHandlers = {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     sticker: (raw, key) => ({
         type: 'sticker',
         sticker: {
@@ -8356,7 +8355,7 @@ const attachmentHandlers = {
             product_id: Number(raw[`${key}_product_id`])
         }
     }),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     money_transfer: (raw, key) => ({
         type: 'money_transfer',
         money_transfer: {
@@ -8365,14 +8364,14 @@ const attachmentHandlers = {
             currency: Number(raw[`${key}_currency`])
         }
     }),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     gift: (raw, key) => ({
         type: 'gift',
         gift: {
             id: Number(raw[key])
         }
     }),
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     link: (raw, key) => {
         const photoId = raw[`${key}_photo`];
         return {
@@ -8387,7 +8386,7 @@ const attachmentHandlers = {
             }
         };
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     doc: (raw, key, _, index) => {
         const type = DocumentKind[raw[`${key}_kind`]] || AttachmentType.DOCUMENT;
         if (type in DocumentKind) {
@@ -8398,7 +8397,7 @@ const attachmentHandlers = {
             [type]: idToAttachmentPayload(raw[key])
         };
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     default: (raw, key, type) => ({
         type,
         [type]: idToAttachmentPayload(raw[key])
@@ -8410,7 +8409,7 @@ const attachmentHandlers = {
 function transformMessage({ 1: id, 2: flags, 3: peer_id, 4: date, 5: text, 6: extra, 7: attachments, 8: random_id, 9: conversation_message_id, 10: update_time
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
  }) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     const message = {
         id,
         conversation_message_id,
@@ -8431,15 +8430,15 @@ function transformMessage({ 1: id, 2: flags, 3: peer_id, 4: date, 5: text, 6: ex
         message.from_id = peer_id;
     }
     if (peer_id < 0 && message.peer_id !== message.from_id) {
-        // eslint-disable-next-line no-bitwise
+
         message.out = Number((flags & 2) === 0);
-        // eslint-disable-next-line no-bitwise
+
         message.important = (flags & 1) !== 0;
     }
     else {
-        // eslint-disable-next-line no-bitwise
+
         message.out = Number((flags & 2) !== 0);
-        // eslint-disable-next-line no-bitwise
+
         message.important = (flags & 8) !== 0;
     }
     if (extra.source_act !== undefined) {
@@ -8785,7 +8784,7 @@ class MessageContext extends Context$1 {
     /**
      * Returns the message payload
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     get messagePayload() {
         return this[kMessagePayload];
     }
@@ -9346,7 +9345,7 @@ class DialogFlagsContext extends Context$1 {
         });
     }
     hasFlag(flag) {
-        // eslint-disable-next-line no-bitwise
+
         return Boolean(this.flags & flag);
     }
     /**
@@ -9674,7 +9673,7 @@ class MessageEventContext extends Context$1 {
     /**
      * Returns the event payload
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     get eventPayload() {
         return this.payload.payload;
     }
@@ -9918,7 +9917,7 @@ class MessageFlagsContext extends Context$1 {
         return this.payload.flags;
     }
     hasFlag(flag) {
-        // eslint-disable-next-line no-bitwise
+
         return Boolean(this.flags & flag);
     }
     /**
@@ -10043,7 +10042,6 @@ class DonutWithdrawContext extends Context$1 {
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const subAttachmentTypes = {
     photo_new: PhotoAttachment,
     video_new: VideoAttachment,
@@ -10599,7 +10597,6 @@ var ButtonColor;
     ButtonColor["POSITIVE"] = "positive";
 })(ButtonColor || (ButtonColor = {}));
 
-// eslint-disable-next-line import/extensions
 const { stat: fileStat } = require$$0$5.promises;
 const { MISSING_PARAMETERS, NO_FILES_TO_UPLOAD, EXCEEDED_MAX_FILES, UNSUPPORTED_SOURCE_TYPE } = UploadErrorCode;
 const isURL = /^https?:\/\//i;
@@ -10877,7 +10874,7 @@ class Upload {
     /**
      * Uploads document
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     async conductDocument(params, { attachmentType = 'doc' } = {}) {
         const response = await this.conduct({
             field: 'file',
@@ -10906,7 +10903,7 @@ class Upload {
     /**
      * Uploads wall document
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     async conductWallDocument(params, { attachmentType = 'doc' } = {}) {
         const response = await this.conduct({
             field: 'file',
@@ -10935,7 +10932,7 @@ class Upload {
     /**
      * Uploads wall document
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     async conductMessageDocument(params, { attachmentType = 'doc' } = {}) {
         const response = await this.conduct({
             field: 'file',
@@ -11110,7 +11107,7 @@ class Upload {
      * Uploads poll photo
      */
     pollPhoto(params
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     ) {
         return this.conduct({
             field: 'file',
@@ -11126,7 +11123,7 @@ class Upload {
      * Behavior for the upload method
      */
     async conduct({ field, params, getServer, serverParams = [], saveFiles, saveParams = [], maxFiles = 1, attachmentType
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
      }) {
         if (!params || !params.source) {
             throw new UploadError({
@@ -11136,7 +11133,7 @@ class Upload {
         }
         const source = normalizeSource(params.source);
         if (source.uploadUrl !== undefined) {
-            // eslint-disable-next-line no-param-reassign
+
             getServer = () => Promise.resolve({
                 upload_url: source.uploadUrl
             });
@@ -11180,7 +11177,7 @@ class Upload {
     /**
      * Building form data
      */
-    // eslint-disable-next-line class-methods-use-this
+
     async buildPayload({ field, values, maxFiles, attachmentType }) {
         const formData = new FormData$1();
         const isMultipart = maxFiles > 1;
@@ -11246,9 +11243,9 @@ class Upload {
         const controller = new AbortController$1();
         const interval = setTimeout(() => controller.abort(), timeout || uploadTimeout);
         const headers = {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
+
             Connection: 'keep-alive',
-            // eslint-disable-next-line @typescript-eslint/naming-convention
+
             'Content-Type': encoder.headers['Content-Type']
         };
         const body = forceBuffer
@@ -11269,7 +11266,7 @@ class Upload {
             if (!response.ok) {
                 throw new Error(response.statusText);
             }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             const result = await response.json();
             return result.response !== undefined
                 ? result.response
@@ -11327,7 +11324,7 @@ class Chain {
     /**
      * Adds method to queue
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     append(method, params) {
         if (this.started) {
             return Promise.reject(new VKError({
@@ -11346,7 +11343,7 @@ class Chain {
     /**
      * Promise based
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     then(thenFn, catchFn) {
         // @ts-expect-error
         return this.run().then(thenFn, catchFn);
@@ -11390,7 +11387,7 @@ class PollingTransport {
          * 64 - Online user platform ID
          * 128 - Return random_id
          */
-        // eslint-disable-next-line no-bitwise
+
         this.mode = 2 | 8 | 64 | 128;
         this.ts = 0;
         this.pts = 0;
@@ -11504,7 +11501,7 @@ class PollingTransport {
                     message: 'Polling request failed'
                 });
             }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             result = await response.json();
         }
         finally {
@@ -11536,7 +11533,6 @@ class PollingTransport {
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const parseRequestJSON = async (req) => {
     const chunks = [];
     let totalSize = 0;
@@ -11580,7 +11576,7 @@ class WebhookTransport {
                 ? 443
                 : 80);
             await require$$0$4.promisify(webhookServer.listen)
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+
                 // @ts-ignore https://devblogs.microsoft.com/typescript/announcing-typescript-4-1/#unmatched-parameters-are-no-longer-related
                 .call(webhookServer, { host, port });
             debug$1(`Webhook listening on port: ${port}`);
@@ -11617,7 +11613,7 @@ class WebhookTransport {
                 next === null || next === void 0 ? void 0 : next();
                 return;
             }
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
             const reqBody = req.body;
             let update;
             try {
@@ -11649,7 +11645,7 @@ class WebhookTransport {
                 res.writeHead(200, headers);
                 res.end('ok');
                 this.webhookHandler(update).catch((error) => {
-                    // eslint-disable-next-line no-console
+
                     console.error('Handle webhook update error', error);
                 });
             }
@@ -11667,7 +11663,7 @@ class WebhookTransport {
      * Returns the middleware for the webhook under koa
      */
     getKoaWebhookMiddleware() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
         return async (context) => {
             const update = context.request.body;
             const { webhookSecret, webhookConfirmation } = this.options;
@@ -11849,7 +11845,7 @@ class Updates {
     constructor({ api, upload, ...options }) {
         this.composer = Composer.builder()
             .caught((context, error) => {
-            // eslint-disable-next-line no-console
+
             console.error(error);
         });
         this.api = api;
@@ -11919,7 +11915,7 @@ class Updates {
     /**
      * Handles longpoll event
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     handlePollingUpdate(update) {
         debug('longpoll update', update);
         const { 0: type } = update;
@@ -11939,7 +11935,7 @@ class Updates {
     /**
      * Handles webhook event
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     handleWebhookUpdate(update) {
         debug('webhook update', update);
         const { type, object: payload, group_id: groupId } = update;
@@ -12853,7 +12849,7 @@ const decodeMap = new Map([
     [158, 382],
     [159, 376],
 ]);
-const fromCodePoint = 
+const fromCodePoint =
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, node/no-unsupported-features/es-builtins
 (_a = String.fromCodePoint) !== null && _a !== void 0 ? _a : function (codePoint) {
     let output = "";
@@ -12934,7 +12930,7 @@ const xmlCodeMap = new Map([
     [62, "&gt;"],
 ]);
 // For compatibility with node < 4, we wrap `codePointAt`
-const getCodePoint = 
+const getCodePoint =
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 String.prototype.codePointAt != null
     ? (str, index) => str.codePointAt(index)
@@ -16227,7 +16223,7 @@ function dynamicStatePseudo(name) {
 // While filters are precompiled, pseudos get called when they are needed
 const pseudos = {
     empty(elem, { adapter }) {
-        return !adapter.getChildren(elem).some((elem) => 
+        return !adapter.getChildren(elem).some((elem) =>
         // FIXME: `getText` call is potentially expensive.
         adapter.isTag(elem) || adapter.getText(elem) !== "");
     },
@@ -17774,7 +17770,7 @@ function index$1(selectorOrNeedle) {
         needle = this[0];
     }
     else {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
+
         $haystack = this;
         needle = isCheerio(selectorOrNeedle)
             ? selectorOrNeedle[0]
@@ -18990,7 +18986,7 @@ function serializeArray() {
         const value = (_a = $elem.val()) !== null && _a !== void 0 ? _a : '';
         // If we have an array of values (e.g. `<select multiple>`), return an array of key/value pairs
         if (Array.isArray(value)) {
-            return value.map((val) => 
+            return value.map((val) =>
             /*
              * We trim replace any line endings (e.g. `\r` or `\r\n` with `\r\n`) to guarantee consistency across platforms
              * These can occur inside of `<textarea>'s`
@@ -24212,7 +24208,7 @@ class Parser$1 {
         if (this.treeAdapter.getNodeSourceCodeLocation(element) && closingToken.location) {
             const ctLoc = closingToken.location;
             const tn = this.treeAdapter.getTagName(element);
-            const endLoc = 
+            const endLoc =
             // NOTE: For cases like <p> <p> </p> - First 'p' closes without a closing
             // tag and for cases like <td> <p> </td> - 'p' closes without a closing tag.
             closingToken.type === TokenType.END_TAG && tn === closingToken.tagName
@@ -40661,7 +40657,7 @@ const fetchCookieFollowRedirectsDecorator = (jar) => {
             }
             const userAgent = findUserAgent(options.headers);
             const headers = userAgent !== undefined
-                // eslint-disable-next-line @typescript-eslint/naming-convention
+
                 ? { 'User-Agent': userAgent }
                 : {};
             const redirectResponse = await fetchCookieFollowRedirects(location, {
@@ -40771,7 +40767,7 @@ class DirectAuthorization {
             compress: false,
             headers: {
                 ...headers,
-                // eslint-disable-next-line @typescript-eslint/naming-convention
+
                 'User-Agent': DESKTOP_USER_AGENT
             }
         }).finally(() => clearTimeout(interval));
@@ -41101,7 +41097,7 @@ function require_global () {
 	// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
 	var global = _global.exports = typeof window != 'undefined' && window.Math == Math
 	  ? window : typeof self != 'undefined' && self.Math == Math ? self
-	  // eslint-disable-next-line no-new-func
+
 	  : Function('return this')();
 	if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 	return _global.exports;
@@ -41454,7 +41450,7 @@ function require_iobject () {
 	hasRequired_iobject = 1;
 	// fallback for non-array-like ES3 and non-enumerable old V8 strings
 	var cof = require_cof();
-	// eslint-disable-next-line no-prototype-builtins
+
 	_iobject = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
 	  return cof(it) == 'String' ? it.split('') : Object(it);
 	};
@@ -41525,10 +41521,10 @@ function require_arrayIncludes$1 () {
 	    var index = toAbsoluteIndex(fromIndex, length);
 	    var value;
 	    // Array#includes uses SameValueZero equality algorithm
-	    // eslint-disable-next-line no-self-compare
+
 	    if (IS_INCLUDES && el != el) while (length > index) {
 	      value = O[index++];
-	      // eslint-disable-next-line no-self-compare
+
 	      if (value != value) return true;
 	    // Array#indexOf ignores holes, Array#includes - not
 	    } else for (;length > index; index++) if (IS_INCLUDES || index in O) {
@@ -42218,7 +42214,7 @@ function require_task () {
 	var defer, channel, port;
 	var run = function () {
 	  var id = +this;
-	  // eslint-disable-next-line no-prototype-builtins
+
 	  if (queue.hasOwnProperty(id)) {
 	    var fn = queue[id];
 	    delete queue[id];
@@ -42235,7 +42231,7 @@ function require_task () {
 	    var i = 1;
 	    while (arguments.length > i) args.push(arguments[i++]);
 	    queue[++counter] = function () {
-	      // eslint-disable-next-line no-new-func
+
 	      invoke(typeof fn == 'function' ? fn : Function(fn), args);
 	    };
 	    defer(counter);
@@ -42494,7 +42490,7 @@ function require_iterDetect () {
 	try {
 	  var riter = [7][ITERATOR]();
 	  riter['return'] = function () { SAFE_CLOSING = true; };
-	  // eslint-disable-next-line no-throw-literal
+
 	  Array.from(riter, function () { throw 2; });
 	} catch (e) { /* empty */ }
 
@@ -42698,7 +42694,7 @@ function requireEs6_promise () {
 	      $reject.call(this, err);
 	    }
 	  };
-	  // eslint-disable-next-line no-unused-vars
+
 	  Internal = function Promise(executor) {
 	    this._c = [];             // <- awaiting reactions
 	    this._a = undefined;      // <- checked in isUnhandled reactions
@@ -45662,7 +45658,6 @@ function requireTemplates$1 () {
 		const chunks = [];
 		let chunk = [];
 
-		// eslint-disable-next-line max-params
 		tmp.replace(TEMPLATE_REGEX, (m, escapeChar, inverse, style, close, chr) => {
 			if (escapeChar) {
 				chunk.push(unescape(escapeChar));
@@ -47965,7 +47960,6 @@ function requireTemplates () {
 		const chunks = [];
 		let chunk = [];
 
-		// eslint-disable-next-line max-params
 		temporary.replace(TEMPLATE_REGEX, (m, escapeCharacter, inverse, style, close, character) => {
 			if (escapeCharacter) {
 				chunk.push(unescape(escapeCharacter));
@@ -48036,7 +48030,7 @@ function requireSource () {
 
 	class ChalkClass {
 		constructor(options) {
-			// eslint-disable-next-line no-constructor-return
+
 			return chalkFactory(options);
 		}
 	}
@@ -48149,7 +48143,7 @@ function requireSource () {
 			}
 
 			// Single argument is hot path, implicit coercion is faster than anything
-			// eslint-disable-next-line no-implicit-coercion
+
 			return applyStyle(builder, (arguments_.length === 1) ? ('' + arguments_[0]) : arguments_.join(' '));
 		};
 
@@ -65201,7 +65195,7 @@ function requireChoice () {
 	  constructor(val, answers) {
 	    // Don't process Choice and Separator object
 	    if (val instanceof Choice || val.type === 'separator') {
-	      // eslint-disable-next-line no-constructor-return
+
 	      return val;
 	    }
 
@@ -70154,7 +70148,7 @@ function requireInternal () {
 	}
 
 	InternalDecoderCesu8.prototype.write = function(buf) {
-	    var acc = this.acc, contBytes = this.contBytes, accBytes = this.accBytes, 
+	    var acc = this.acc, contBytes = this.contBytes, accBytes = this.accBytes,
 	        res = '';
 	    for (var i = 0; i < buf.length; i++) {
 	        var curByte = buf[i];
@@ -70330,7 +70324,7 @@ function requireUtf16 () {
 	        // Codec is not chosen yet. Accumulate initial bytes.
 	        this.initialBytes.push(buf);
 	        this.initialBytesLen += buf.length;
-	        
+
 	        if (this.initialBytesLen < 16) // We need more bytes to use space heuristic (see below)
 	            return '';
 
@@ -70425,8 +70419,8 @@ function requireUtf7 () {
 	    // Naive implementation.
 	    // Non-direct chars are encoded as "+<base64>-"; single "+" char is encoded as "+-".
 	    return Buffer.from(str.replace(nonDirectChars, function(chunk) {
-	        return "+" + (chunk === '+' ? '' : 
-	            this.iconv.encode(chunk, 'utf16-be').toString('base64').replace(/=+$/, '')) 
+	        return "+" + (chunk === '+' ? '' :
+	            this.iconv.encode(chunk, 'utf16-be').toString('base64').replace(/=+$/, ''))
 	            + "-";
 	    }.bind(this)));
 	};
@@ -70448,7 +70442,7 @@ function requireUtf7 () {
 	for (var i = 0; i < 256; i++)
 	    base64Chars[i] = base64Regex.test(String.fromCharCode(i));
 
-	var plusChar = '+'.charCodeAt(0), 
+	var plusChar = '+'.charCodeAt(0),
 	    minusChar = '-'.charCodeAt(0),
 	    andChar = '&'.charCodeAt(0);
 
@@ -70696,17 +70690,17 @@ function requireSbcsCodec () {
 	var Buffer = requireSafer().Buffer;
 
 	// Single-byte codec. Needs a 'chars' string parameter that contains 256 or 128 chars that
-	// correspond to encoded bytes (if 128 - then lower half is ASCII). 
+	// correspond to encoded bytes (if 128 - then lower half is ASCII).
 
 	sbcsCodec._sbcs = SBCSCodec;
 	function SBCSCodec(codecOptions, iconv) {
 	    if (!codecOptions)
 	        throw new Error("SBCS codec is called without the data.")
-	    
+
 	    // Prepare char buffer for decoding.
 	    if (!codecOptions.chars || (codecOptions.chars.length !== 128 && codecOptions.chars.length !== 256))
 	        throw new Error("Encoding '"+codecOptions.type+"' has incorrect 'chars' (must be of len 128 or 256)");
-	    
+
 	    if (codecOptions.chars.length === 128) {
 	        var asciiString = "";
 	        for (var i = 0; i < 128; i++)
@@ -70715,7 +70709,7 @@ function requireSbcsCodec () {
 	    }
 
 	    this.decodeBuf = Buffer.from(codecOptions.chars, 'ucs2');
-	    
+
 	    // Encoding buffer.
 	    var encodeBuf = Buffer.alloc(65536, iconv.defaultCharSingleByte.charCodeAt(0));
 
@@ -70737,7 +70731,7 @@ function requireSbcsCodec () {
 	    var buf = Buffer.alloc(str.length);
 	    for (var i = 0; i < str.length; i++)
 	        buf[i] = this.encodeBuf[str.charCodeAt(i)];
-	    
+
 	    return buf;
 	};
 
@@ -71457,7 +71451,7 @@ function requireDbcsCodec () {
 	    this.decodeTables = [];
 	    this.decodeTables[0] = UNASSIGNED_NODE.slice(0); // Create root node.
 
-	    // Sometimes a MBCS char corresponds to a sequence of unicode chars. We store them as arrays of integers here. 
+	    // Sometimes a MBCS char corresponds to a sequence of unicode chars. We store them as arrays of integers here.
 	    this.decodeTableSeq = [];
 
 	    // Actual mapping tables consist of chunks. Use them to fill up decode tables.
@@ -71466,7 +71460,7 @@ function requireDbcsCodec () {
 
 	    this.defaultCharUnicode = iconv.defaultCharUnicode;
 
-	    
+
 	    // Encode tables: Unicode -> DBCS.
 
 	    // `encodeTable` is array mapping from unicode char to encoded char. All its values are integers for performance.
@@ -71475,7 +71469,7 @@ function requireDbcsCodec () {
 	    //         == UNASSIGNED -> no conversion found. Output a default char.
 	    //         <= SEQ_START  -> it's an index in encodeTableSeq, see below. The character starts a sequence.
 	    this.encodeTable = [];
-	    
+
 	    // `encodeTableSeq` is used when a sequence of unicode characters is encoded as a single code. We use a tree of
 	    // objects where keys correspond to characters in sequence and leafs are the encoded dbcs values. A special DEF_CHAR key
 	    // means end of sequence (needed when one sequence is a strict subsequence of another).
@@ -71493,7 +71487,7 @@ function requireDbcsCodec () {
 	                for (var j = val.from; j <= val.to; j++)
 	                    skipEncodeChars[j] = true;
 	        }
-	        
+
 	    // Use decode trie to recursively fill out encode tables.
 	    this._fillEncodeTable(0, 0, skipEncodeChars);
 
@@ -71530,7 +71524,7 @@ function requireDbcsCodec () {
 	            thirdByteNode[i] = NODE_START - fourthByteNodeIdx;
 	        for (var i = 0x30; i <= 0x39; i++)
 	            fourthByteNode[i] = GB18030_CODE;
-	    }        
+	    }
 	}
 
 	DBCSCodec.prototype.encoder = DBCSEncoder;
@@ -71595,7 +71589,7 @@ function requireDbcsCodec () {
 	                else
 	                    writeTable[curAddr++] = code; // Basic char
 	            }
-	        } 
+	        }
 	        else if (typeof part === "number") { // Integer, meaning increasing sequence starting with prev character.
 	            var charCode = writeTable[curAddr - 1] + 1;
 	            for (var l = 0; l < part; l++)
@@ -71626,7 +71620,7 @@ function requireDbcsCodec () {
 	};
 
 	DBCSCodec.prototype._setEncodeSequence = function(seq, dbcsCode) {
-	    
+
 	    // Get the root of character tree according to first character of the sequence.
 	    var uCode = seq[0];
 	    var bucket = this._getEncodeBucket(uCode);
@@ -71687,7 +71681,7 @@ function requireDbcsCodec () {
 	    // Encoder state
 	    this.leadSurrogate = -1;
 	    this.seqObj = undefined;
-	    
+
 	    // Static data
 	    this.encodeTable = codec.encodeTable;
 	    this.encodeTableSeq = codec.encodeTableSeq;
@@ -71709,7 +71703,7 @@ function requireDbcsCodec () {
 	        }
 	        else {
 	            var uCode = nextChar;
-	            nextChar = -1;    
+	            nextChar = -1;
 	        }
 
 	        // 1. Handle surrogates.
@@ -71731,7 +71725,7 @@ function requireDbcsCodec () {
 	                    // Incomplete surrogate pair - only trail surrogate found.
 	                    uCode = UNASSIGNED;
 	                }
-	                
+
 	            }
 	        }
 	        else if (leadSurrogate !== -1) {
@@ -71767,7 +71761,7 @@ function requireDbcsCodec () {
 	            var subtable = this.encodeTable[uCode >> 8];
 	            if (subtable !== undefined)
 	                dbcsCode = subtable[uCode & 0xFF];
-	            
+
 	            if (dbcsCode <= SEQ_START) { // Sequence start
 	                seqObj = this.encodeTableSeq[SEQ_START-dbcsCode];
 	                continue;
@@ -71790,7 +71784,7 @@ function requireDbcsCodec () {
 	        // 3. Write dbcsCode character.
 	        if (dbcsCode === UNASSIGNED)
 	            dbcsCode = this.defaultCharSingleByte;
-	        
+
 	        if (dbcsCode < 0x100) {
 	            newBuf[j++] = dbcsCode;
 	        }
@@ -71835,7 +71829,7 @@ function requireDbcsCodec () {
 	        newBuf[j++] = this.defaultCharSingleByte;
 	        this.leadSurrogate = -1;
 	    }
-	    
+
 	    return newBuf.slice(0, j);
 	};
 
@@ -71859,14 +71853,14 @@ function requireDbcsCodec () {
 
 	DBCSDecoder.prototype.write = function(buf) {
 	    var newBuf = Buffer.alloc(buf.length*2),
-	        nodeIdx = this.nodeIdx, 
+	        nodeIdx = this.nodeIdx,
 	        prevBuf = this.prevBuf, prevBufOffset = this.prevBuf.length,
 	        seqStart = -this.prevBuf.length, // idx of the start of current parsed sequence.
 	        uCode;
 
 	    if (prevBufOffset > 0) // Make prev buf overlap a little to make it easier to slice later.
 	        prevBuf = Buffer.concat([prevBuf, buf.slice(0, 10)]);
-	    
+
 	    for (var i = 0, j = 0; i < buf.length; i++) {
 	        var curByte = (i >= 0) ? buf[i] : prevBuf[i + prevBufOffset];
 
@@ -71903,7 +71897,7 @@ function requireDbcsCodec () {
 	            throw new Error("iconv-lite internal error: invalid decoding table value " + uCode + " at " + nodeIdx + "/" + curByte);
 
 	        // Write the character to buffer, handling higher planes using surrogate pair.
-	        if (uCode > 0xFFFF) { 
+	        if (uCode > 0xFFFF) {
 	            uCode -= 0x10000;
 	            var uCodeLead = 0xD800 + Math.floor(uCode / 0x400);
 	            newBuf[j++] = uCodeLead & 0xFF;
@@ -80255,11 +80249,11 @@ function requireDbcsData () {
 	// require()-s are direct to support Browserify.
 
 	dbcsData = {
-	    
+
 	    // == Japanese/ShiftJIS ====================================================
 	    // All japanese encodings are based on JIS X set of standards:
 	    // JIS X 0201 - Single-byte encoding of ASCII + ¥ + Kana chars at 0xA1-0xDF.
-	    // JIS X 0208 - Main set of 6879 characters, placed in 94x94 plane, to be encoded by 2 bytes. 
+	    // JIS X 0208 - Main set of 6879 characters, placed in 94x94 plane, to be encoded by 2 bytes.
 	    //              Has several variations in 1978, 1983, 1990 and 1997.
 	    // JIS X 0212 - Supplementary plane of 6067 chars in 94x94 plane. 1990. Effectively dead.
 	    // JIS X 0213 - Extension and modern replacement of 0208 and 0212. Total chars: 11233.
@@ -80277,7 +80271,7 @@ function requireDbcsData () {
 	    //               0x8F, (0xA1-0xFE)x2 - 0212 plane (94x94).
 	    //  * JIS X 208: 7-bit, direct encoding of 0208. Byte ranges: 0x21-0x7E (94 values). Uncommon.
 	    //               Used as-is in ISO2022 family.
-	    //  * ISO2022-JP: Stateful encoding, with escape sequences to switch between ASCII, 
+	    //  * ISO2022-JP: Stateful encoding, with escape sequences to switch between ASCII,
 	    //                0201-1976 Roman, 0208-1978, 0208-1983.
 	    //  * ISO2022-JP-1: Adds esc seq for 0212-1990.
 	    //  * ISO2022-JP-2: Adds esc seq for GB2313-1980, KSX1001-1992, ISO8859-1, ISO8859-7.
@@ -80389,7 +80383,7 @@ function requireDbcsData () {
 	    //  * Windows CP 951: Microsoft variant of Big5-HKSCS-2001. Seems to be never public. http://me.abelcheung.org/articles/research/what-is-cp951/
 	    //  * Big5-2003 (Taiwan standard) almost superset of cp950.
 	    //  * Unicode-at-on (UAO) / Mozilla 1.8. Falling out of use on the Web. Not supported by other browsers.
-	    //  * Big5-HKSCS (-2001, -2004, -2008). Hong Kong standard. 
+	    //  * Big5-HKSCS (-2001, -2004, -2008). Hong Kong standard.
 	    //    many unicode code points moved from PUA to Supplementary plane (U+2XXXX) over the years.
 	    //    Plus, it has 4 combining sequences.
 	    //    Seems that Mozilla refused to support it for 10 yrs. https://bugzilla.mozilla.org/show_bug.cgi?id=162431 https://bugzilla.mozilla.org/show_bug.cgi?id=310299
@@ -80400,7 +80394,7 @@ function requireDbcsData () {
 	    //    In the encoder, it might make sense to support encoding old PUA mappings to Big5 bytes seq-s.
 	    //    Official spec: http://www.ogcio.gov.hk/en/business/tech_promotion/ccli/terms/doc/2003cmp_2008.txt
 	    //                   http://www.ogcio.gov.hk/tc/business/tech_promotion/ccli/terms/doc/hkscs-2008-big5-iso.txt
-	    // 
+	    //
 	    // Current understanding of how to deal with Big5(-HKSCS) is in the Encoding Standard, http://encoding.spec.whatwg.org/#big5-encoder
 	    // Unicode mapping (http://www.unicode.org/Public/MAPPINGS/OBSOLETE/EASTASIA/OTHER/BIG5.TXT) is said to be wrong.
 
@@ -80447,7 +80441,7 @@ function requireEncodings () {
 		    requireDbcsData(),
 		];
 
-		// Put all encoding/alias/codec definitions to single object and export it. 
+		// Put all encoding/alias/codec definitions to single object and export it.
 		for (var i = 0; i < modules.length; i++) {
 		    var module = modules[i];
 		    for (var enc in module)
@@ -80471,7 +80465,7 @@ function requireStreams () {
 
 	// == Exports ==================================================================
 	streams = function(iconv) {
-	    
+
 	    // Additional Public API.
 	    iconv.encodeStream = function encodeStream(encoding, options) {
 	        return new IconvLiteEncoderStream(iconv.getEncoder(encoding, options), options);
@@ -80566,7 +80560,7 @@ function requireStreams () {
 	IconvLiteDecoderStream.prototype._flush = function(done) {
 	    try {
 	        var res = this.conv.end();
-	        if (res && res.length) this.push(res, this.encoding);                
+	        if (res && res.length) this.push(res, this.encoding);
 	        done();
 	    }
 	    catch (e) {
@@ -80616,7 +80610,7 @@ function requireExtendNode () {
 	        }
 
 	        var nodeNativeEncodings = {
-	            'hex': true, 'utf8': true, 'utf-8': true, 'ascii': true, 'binary': true, 
+	            'hex': true, 'utf8': true, 'utf-8': true, 'ascii': true, 'binary': true,
 	            'base64': true, 'ucs2': true, 'ucs-2': true, 'utf16le': true, 'utf-16le': true,
 	        };
 
@@ -80841,7 +80835,7 @@ function requireLib () {
 
 		    var res = encoder.write(str);
 		    var trail = encoder.end();
-		    
+
 		    return (trail && trail.length > 0) ? Buffer.concat([res, trail]) : res;
 		};
 
@@ -80881,7 +80875,7 @@ function requireLib () {
 		iconv.getCodec = function getCodec(encoding) {
 		    if (!iconv.encodings)
 		        iconv.encodings = requireEncodings(); // Lazy load all encoding definitions.
-		    
+
 		    // Canonicalize encoding name: strip all non-alphanumeric chars and appended year.
 		    var enc = iconv._canonicalizeEncoding(encoding);
 
@@ -80905,7 +80899,7 @@ function requireLib () {
 
 		                if (!codecOptions.encodingName)
 		                    codecOptions.encodingName = enc;
-		                
+
 		                enc = codecDef.type;
 		                break;
 
@@ -81279,7 +81273,7 @@ function requireTmp () {
 	  const name = tmpNameSync(opts);
 	  var fd = fs.openSync(name, CREATE_FLAGS, opts.mode || FILE_MODE);
 	  if (opts.discardDescriptor) {
-	    fs.closeSync(fd); 
+	    fs.closeSync(fd);
 	    fd = undefined;
 	  }
 
@@ -83088,7 +83082,7 @@ const authMethods = [
         value: AuthMethodType.AccessToken,
         async handler() {
             reporter.info('You can get a token here: https://oauth.vk.com/authorize?client_id=6287487&scope=1073737727&redirect_uri=https://oauth.vk.com/blank.html&display=page&response_type=token&revoke=1');
-            // eslint-disable-next-line no-constant-condition
+
             while (true) {
                 const accessToken = await reporter.question('Write your token (required)', {
                     required: true
@@ -83166,7 +83160,6 @@ class WritableStream extends require$$1$3.Writable {
     }
 }
 
-// eslint-disable-next-line no-promise-executor-return
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const formatDuration = (rawMs) => {
     const ms = Math.abs(rawMs);
@@ -83283,7 +83276,7 @@ const commentsAction = {
         let failedDeleteComments = 0;
         await Promise.all(commentsForDelete.map(async (comment) => {
             let retries = 0;
-            // eslint-disable-next-line no-constant-condition
+
             while (true) {
                 if (retries === 3) {
                     failedDeleteComments += 1;
@@ -83296,7 +83289,7 @@ const commentsAction = {
                 catch (error) {
                     retries += 1;
                     if (process.env.DEBUG) {
-                        // eslint-disable-next-line no-console
+
                         console.error('Failed delete comment', error);
                     }
                 }
@@ -83400,7 +83393,7 @@ const likesAction = {
         let failedDeleteLikes = 0;
         for (const like of likesForDelete) {
             let retries = 0;
-            // eslint-disable-next-line no-constant-condition
+
             while (true) {
                 if (retries === 3) {
                     failedDeleteLikes += 1;
@@ -83414,7 +83407,7 @@ const likesAction = {
                 catch (error) {
                     retries += 1;
                     if (process.env.DEBUG) {
-                        // eslint-disable-next-line no-console
+
                         console.error('Failed delete like', error);
                     }
                 }
@@ -83532,7 +83525,7 @@ async function run() {
         }
         catch (error) {
             reporter.error(`An error occurred while performing actions — ${action.name}`);
-            // eslint-disable-next-line no-console
+
             console.log(error);
         }
     }
@@ -83544,7 +83537,7 @@ run().catch((error) => {
     if (error.message === 'canceled') {
         return;
     }
-    // eslint-disable-next-line no-console
+
     console.error(error);
     process.exit(1);
 });
@@ -84252,7 +84245,7 @@ function requirePonyfill_es2018 () {
 		    /// <reference lib="es2015.core" />
 		    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/isNaN#Polyfill
 		    const NumberIsNaN = Number.isNaN || function (x) {
-		        // eslint-disable-next-line no-self-compare
+
 		        return x !== x;
 		    };
 
@@ -84269,7 +84262,7 @@ function requirePonyfill_es2018 () {
 		        return O;
 		    }
 		    // Not implemented correctly
-		    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 		    function IsDetachedBuffer(O) {
 		        return false;
 		    }
@@ -86171,7 +86164,7 @@ function requirePonyfill_es2018 () {
 		        }
 		    }
 		    function createDOMExceptionPolyfill() {
-		        // eslint-disable-next-line no-shadow
+
 		        const ctor = function DOMException(message, name) {
 		            this.message = message || '';
 		            this.name = name || 'Error';
@@ -86183,7 +86176,7 @@ function requirePonyfill_es2018 () {
 		        Object.defineProperty(ctor.prototype, 'constructor', { value: ctor, writable: true, configurable: true });
 		        return ctor;
 		    }
-		    // eslint-disable-next-line no-redeclare
+
 		    const DOMException$1 = isDOMExceptionConstructor(NativeDOMException) ? NativeDOMException : createDOMExceptionPolyfill();
 
 		    function ReadableStreamPipeTo(source, dest, preventClose, preventAbort, preventCancel, signal) {
@@ -87819,7 +87812,7 @@ function requirePonyfill_es2018 () {
 		    Object.defineProperty(exports, '__esModule', { value: true });
 
 		})));
-		
+
 } (ponyfill_es2018, ponyfill_es2018.exports));
 	return ponyfill_es2018.exports;
 }
@@ -88241,7 +88234,7 @@ class FetchError extends FetchBaseError {
 		super(message, type);
 		// When err.type is `system`, err.erroredSysCall contains system error and err.code contains system error code
 		if (systemError) {
-			// eslint-disable-next-line no-multi-assign
+
 			this.code = this.errno = systemError.code;
 			this.erroredSysCall = systemError.syscall;
 		}
@@ -88754,7 +88747,7 @@ class Headers extends URLSearchParams {
 			}
 		} else if (init == null) ; else if (typeof init === 'object' && !node_util.types.isBoxedPrimitive(init)) {
 			const method = init[Symbol.iterator];
-			// eslint-disable-next-line no-eq-null, eqeqeq
+
 			if (method == null) {
 				// Record<ByteString, ByteString>
 				result.push(...Object.entries(init));
@@ -88799,7 +88792,7 @@ class Headers extends URLSearchParams {
 		super(result);
 
 		// Returning a Proxy that will lowercase key names, validate parameters and sort keys
-		// eslint-disable-next-line no-constructor-return
+
 		return new Proxy(this, {
 			get(target, p, receiver) {
 				switch (p) {
@@ -88992,7 +88985,6 @@ class Response extends Body {
 	constructor(body = null, options = {}) {
 		super(body, options);
 
-		// eslint-disable-next-line no-eq-null, eqeqeq, no-negated-condition
 		const status = options.status != null ? options.status : 200;
 
 		const headers = new Headers(options.headers);
@@ -89519,7 +89511,6 @@ class Request extends Body {
 			doBadDataWarn();
 		}
 
-		// eslint-disable-next-line no-eq-null, eqeqeq
 		if ((init.body != null || (isRequest(input) && input.body !== null)) &&
 			(method === 'GET' || method === 'HEAD')) {
 			throw new TypeError('Request with GET/HEAD method cannot have body');
@@ -89551,13 +89542,12 @@ class Request extends Body {
 			signal = init.signal;
 		}
 
-		// eslint-disable-next-line no-eq-null, eqeqeq
 		if (signal != null && !isAbortSignal(signal)) {
 			throw new TypeError('Expected signal to be an instanceof AbortSignal or EventTarget');
 		}
 
 		// §5.4, Request constructor steps, step 15.1
-		// eslint-disable-next-line no-eq-null, eqeqeq
+
 		let referrer = init.referrer == null ? input.referrer : init.referrer;
 		if (referrer === '') {
 			// §5.4, Request constructor steps, step 15.2
@@ -90218,7 +90208,6 @@ async function fetch(url, options_) {
 			resolve(response);
 		});
 
-		// eslint-disable-next-line promise/prefer-await-to-then
 		writeToStream(request_, request).catch(reject);
 	});
 }

@@ -185,7 +185,6 @@ async function run() {
 		} catch (error) {
 			reporter.error(`An error occurred while performing actions — ${action.name}`);
 
-			// eslint-disable-next-line no-console
 			console.log(error);
 		}
 	}
@@ -201,7 +200,6 @@ run().catch((error) => {
 		return;
 	}
 
-	// eslint-disable-next-line no-console
 	console.error(error);
 
 	process.exit(1);

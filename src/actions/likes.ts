@@ -152,7 +152,6 @@ export const likesAction: IAction = {
 		for (const like of likesForDelete) {
 			let retries = 0;
 
-			// eslint-disable-next-line no-constant-condition
 			while (true) {
 				if (retries === 3) {
 					failedDeleteLikes += 1;
@@ -170,7 +169,7 @@ export const likesAction: IAction = {
 					retries += 1;
 
 					if (process.env.DEBUG) {
-						// eslint-disable-next-line no-console
+
 						console.error('Failed delete like', error);
 					}
 				}

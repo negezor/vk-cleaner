@@ -170,6 +170,5 @@ declare module 'yurnalist' {
 
 	const reporter: ConsoleReporter;
 
-	// eslint-disable-next-line import/no-default-export
 	export default reporter;
 };

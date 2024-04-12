@@ -151,7 +151,6 @@ export const commentsAction: IAction = {
 		await Promise.all(commentsForDelete.map(async (comment) => {
 			let retries = 0;
 
-			// eslint-disable-next-line no-constant-condition
 			while (true) {
 				if (retries === 3) {
 					failedDeleteComments += 1;
@@ -167,7 +166,7 @@ export const commentsAction: IAction = {
 					retries += 1;
 
 					if (process.env.DEBUG) {
-						// eslint-disable-next-line no-console
+
 						console.error('Failed delete comment', error);
 					}
 				}

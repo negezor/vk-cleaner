@@ -15,7 +15,6 @@ const cacheRoot = pathJoin(tmpdir(), '.rpt2_cache');
 const src = pathJoin(__dirname, 'src');
 const dist = pathJoin(__dirname, 'dist');
 
-// eslint-disable-next-line import/no-default-export
 export default defineConfig({
 	input: pathJoin(src, 'index.ts'),
 	external: process.env.NODE_ENV !== 'production'
