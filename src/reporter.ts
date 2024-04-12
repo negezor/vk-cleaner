@@ -1,3 +1,4 @@
-import { createReporter } from 'yurnalist';
+import yurnalist from 'yurnalist';
 
-export const reporter = createReporter({});
+// @ts-expect-error CJS mixed
+export const reporter = yurnalist.createReporter({});
