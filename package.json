@@ -20,6 +20,7 @@
     },
     "type": "module",
     "dependencies": {
+        "@inquirer/prompts": "^4.3.2",
         "@vk-io/authorization": "^1.4.1",
         "common-tags": "^1.8.2",
         "htmlparser2": "^9.1.0",
