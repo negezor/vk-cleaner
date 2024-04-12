@@ -4,20 +4,15 @@ import { API } from 'vk-io';
 
 import { authMethods } from './auth';
 
-import {
-    type IAction,
+import { type IAction, commentsAction, likesAction } from './actions';
 
-    commentsAction,
-    likesAction
-} from './actions';
-
-import { reporter } from './reporter';
 import { callbackService } from './callback-service';
-import { delay, getDirectories, formatDuration } from './helpers';
+import { delay, formatDuration, getDirectories } from './helpers';
+import { reporter } from './reporter';
 
 const actions = {
     commentsAction,
-    likesAction
+    likesAction,
 };
 
 async function run() {
@@ -33,18 +28,18 @@ async function run() {
         const listFolders = getDirectories(process.cwd());
 
         if (listFolders.length === 0) {
-            reporter.error('We didn\'t find the Archive folder or others');
+            reporter.error("We didn't find the Archive folder or others");
 
             return;
         }
 
-        archivePath = await reporter.prompt(
-            'We didn\'t find the Archive folder, which folder did you unpack to?',
+        archivePath = (await reporter.prompt(
+            "We didn't find the Archive folder, which folder did you unpack to?",
             listFolders,
             {
-                type: 'list'
-            }
-        ) as unknown as string;
+                type: 'list',
+            },
+        )) as unknown as string;
 
         archivePath = `${process.cwd()}/${archivePath}`;
     }
@@ -57,18 +52,12 @@ async function run() {
         return;
     }
 
-    const authMethodValue = await reporter.prompt(
-        'Select an authorization method',
-        authMethods,
-        {
-            name: 'name',
-            type: 'list'
-        }
-    ) as unknown as string;
+    const authMethodValue = (await reporter.prompt('Select an authorization method', authMethods, {
+        name: 'name',
+        type: 'list',
+    })) as unknown as string;
 
-    const authMethod = authMethods.find(item => (
-        item.value === authMethodValue
-    ));
+    const authMethod = authMethods.find(item => item.value === authMethodValue);
 
     if (!authMethod) {
         reporter.error(`Unsupported ${authMethodValue} auth method`);
@@ -85,28 +74,27 @@ async function run() {
     const api = new API({
         callbackService,
 
-        token: accessToken
+        token: accessToken,
     });
 
     const rawSupportedActions = await Promise.all(
-        Object.values(actions)
-            .map(async (action) => {
-                const supported = await action.canRun({
-                    archivePath,
-                    archiveFolders,
+        Object.values(actions).map(async action => {
+            const supported = await action.canRun({
+                archivePath,
+                archiveFolders,
 
-                    api
-                });
+                api,
+            });
 
-                if (!supported) {
-                    return undefined;
-                }
+            if (!supported) {
+                return undefined;
+            }
 
-                return action;
-            })
+            return action;
+        }),
     );
 
-    const supportedActions = rawSupportedActions.filter(Boolean)  as IAction[];
+    const supportedActions = rawSupportedActions.filter(Boolean) as IAction[];
 
     if (supportedActions.length === 0) {
         reporter.warn('No supported cleaning methods found');
@@ -119,18 +107,15 @@ async function run() {
         supportedActions.map(action => ({
             ...action,
 
-            name: `${action.name} — ${action.description}`
+            name: `${action.name} — ${action.description}`,
         })),
         {
             name: 'name',
-            type: 'checkbox'
-        }
+            type: 'checkbox',
+        },
     );
 
-    const selectedActions = Object.values(actions)
-        .filter(action => (
-            selectedActionValues.includes(action.value)
-        ));
+    const selectedActions = Object.values(actions).filter(action => selectedActionValues.includes(action.value));
 
     if (selectedActions.length === 0) {
         reporter.warn('You have not selected any actions');
@@ -138,11 +123,7 @@ async function run() {
         return;
     }
 
-    const actionsForConfirm = selectedActions
-        .map(action => (
-            `- ${action.name} — ${action.description}`
-        ))
-        .join('\n');
+    const actionsForConfirm = selectedActions.map(action => `- ${action.name} — ${action.description}`).join('\n');
 
     const confirmed = await reporter.prompt(
         stripIndents`
@@ -154,8 +135,8 @@ async function run() {
         `,
         [],
         {
-            type: 'confirm'
-        }
+            type: 'confirm',
+        },
     );
 
     if (!confirmed) {
@@ -176,7 +157,7 @@ async function run() {
                 archivePath,
                 archiveFolders,
 
-                api
+                api,
             });
 
             const tookTime = formatDuration(Date.now() - startAt);
@@ -194,7 +175,7 @@ async function run() {
     process.exit(0);
 }
 
-run().catch((error) => {
+run().catch(error => {
     // Ignore exit from process with active prompt
     if (error.message === 'canceled') {
         return;

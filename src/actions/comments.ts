@@ -1,6 +1,6 @@
 import { stripIndents } from 'common-tags';
-import { type API, resolveResource } from 'vk-io';
 import { WritableStream as HTMLParserStream } from 'htmlparser2/lib/WritableStream';
+import { type API, resolveResource } from 'vk-io';
 
 import { once } from 'node:events';
 import { createReadStream } from 'node:fs';
@@ -23,7 +23,7 @@ const deleteComment = (api: API, options: IDeleteCommentOptions) => {
 
     const params = {
         comment_id: commentId,
-        owner_id: ownerId
+        owner_id: ownerId,
     };
 
     if (type === 'photo') {
@@ -45,12 +45,7 @@ const deleteComment = (api: API, options: IDeleteCommentOptions) => {
     throw new Error('Unsupported type for delete comment');
 };
 
-const allowResourceTypes = new Set([
-    'market',
-    'photo',
-    'video',
-    'wall'
-]);
+const allowResourceTypes = new Set(['market', 'photo', 'video', 'wall']);
 
 export const commentsAction: IAction = {
     value: 'DELETE_COMMENTS',
@@ -101,7 +96,7 @@ export const commentsAction: IAction = {
                     const resolvePromise = resolveResource({
                         api,
 
-                        resource: attributes.href
+                        resource: attributes.href,
                     });
 
                     parseCompletedChain.then(async () => {
@@ -115,10 +110,10 @@ export const commentsAction: IAction = {
                             commentId: Number(commentId),
                             // @ts-expect-error ts...
                             ownerId: resouce.ownerId,
-                            type: resouce.type as IDeleteCommentOptions['type']
+                            type: resouce.type as IDeleteCommentOptions['type'],
                         });
                     });
-                }
+                },
             });
 
             const parserStream = htmlFileStream.pipe(htmlParserStream);
@@ -148,36 +143,37 @@ export const commentsAction: IAction = {
 
         let failedDeleteComments = 0;
 
-        await Promise.all(commentsForDelete.map(async (comment) => {
-            let retries = 0;
+        await Promise.all(
+            commentsForDelete.map(async comment => {
+                let retries = 0;
 
-            while (true) {
-                if (retries === 3) {
-                    failedDeleteComments += 1;
+                while (true) {
+                    if (retries === 3) {
+                        failedDeleteComments += 1;
 
-                    break;
-                }
+                        break;
+                    }
 
-                try {
-                    await deleteComment(api, comment);
+                    try {
+                        await deleteComment(api, comment);
 
-                    break;
-                } catch (error) {
-                    retries += 1;
+                        break;
+                    } catch (error) {
+                        retries += 1;
 
-                    if (process.env.DEBUG) {
-
-                        console.error('Failed delete comment', error);
+                        if (process.env.DEBUG) {
+                            console.error('Failed delete comment', error);
+                        }
                     }
                 }
-            }
 
-            deleteCommentsTick();
-        }));
+                deleteCommentsTick();
+            }),
+        );
 
         reporter.info(stripIndents`
             Comments deleted: ${commentsForDelete.length - failedDeleteComments}
             Delete failed: ${failedDeleteComments}
         `);
-    }
+    },
 };

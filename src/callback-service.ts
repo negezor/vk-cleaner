@@ -9,7 +9,7 @@ callbackService.onCaptcha(async (payload, retry) => {
 
     try {
         const code = await reporter.question(`Open the link and enter text from captcha: ${payload.src}`, {
-            required: true
+            required: true,
         });
 
         await retry(code);
@@ -25,7 +25,7 @@ callbackService.onTwoFactor(async (payload, retry) => {
 
     try {
         const code = await reporter.question('Enter your two-factor authentication code (required)', {
-            required: true
+            required: true,
         });
 
         await retry(code);

@@ -1,6 +1,6 @@
 import { stripIndents } from 'common-tags';
-import { type API, resolveResource, type Objects } from 'vk-io';
 import { WritableStream as HTMLParserStream } from 'htmlparser2/lib/WritableStream';
+import { type API, type Objects, resolveResource } from 'vk-io';
 
 import { once } from 'node:events';
 import { createReadStream } from 'node:fs';
@@ -8,12 +8,7 @@ import { join as pathJoin } from 'node:path';
 
 import type { IAction } from './action';
 
-import {
-    formatDuration,
-    getDirectories,
-    getFiles,
-    delay
-} from '../helpers';
+import { delay, formatDuration, getDirectories, getFiles } from '../helpers';
 import { reporter } from '../reporter';
 
 export interface IDeleteLikeOptions {
@@ -29,17 +24,11 @@ const deleteLike = (api: API, options: IDeleteLikeOptions) => {
     return api.likes.delete({
         type,
         owner_id: ownerId,
-        item_id: id
+        item_id: id,
     });
 };
 
-const allowResourceTypes = new Set([
-    'market',
-    'photo',
-    'video',
-    'note',
-    'wall'
-]);
+const allowResourceTypes = new Set(['market', 'photo', 'video', 'note', 'wall']);
 
 export const likesAction: IAction = {
     value: 'DELETE_LIKES',
@@ -52,9 +41,7 @@ export const likesAction: IAction = {
             return false;
         }
 
-        const likeFolders = getDirectories(
-            pathJoin(archivePath, 'likes')
-        );
+        const likeFolders = getDirectories(pathJoin(archivePath, 'likes'));
 
         return likeFolders.length !== 0;
     },
@@ -62,20 +49,17 @@ export const likesAction: IAction = {
     async handler({ api, archivePath }) {
         const likesPath = pathJoin(archivePath, 'likes');
 
-        const likeFolders = getDirectories(
-            pathJoin(likesPath)
-        );
+        const likeFolders = getDirectories(pathJoin(likesPath));
 
-        const htmlFilePaths = likeFolders
-            .flatMap(likeFolder => {
-                const likeFolderPath = pathJoin(likesPath, likeFolder);
+        const htmlFilePaths = likeFolders.flatMap(likeFolder => {
+            const likeFolderPath = pathJoin(likesPath, likeFolder);
 
-                const files = getFiles(likeFolderPath)
-                    .filter(filename => filename.endsWith('.html'))
-                    .map(filename => pathJoin(likeFolderPath, filename));
+            const files = getFiles(likeFolderPath)
+                .filter(filename => filename.endsWith('.html'))
+                .map(filename => pathJoin(likeFolderPath, filename));
 
-                return files;
-            });
+            return files;
+        });
 
         const likesForDelete: IDeleteLikeOptions[] = [];
 
@@ -101,7 +85,7 @@ export const likesAction: IAction = {
                     const resolvePromise = resolveResource({
                         api,
 
-                        resource: attributes.href
+                        resource: attributes.href,
                     });
 
                     parseCompletedChain.then(async () => {
@@ -115,10 +99,10 @@ export const likesAction: IAction = {
                             id: resouce.id,
                             // @ts-expect-error ts...
                             ownerId: resouce.ownerId,
-                            type: resouce.type as IDeleteLikeOptions['type']
+                            type: resouce.type as IDeleteLikeOptions['type'],
                         });
                     });
-                }
+                },
             });
 
             const parserStream = htmlFileStream.pipe(htmlParserStream);
@@ -168,7 +152,6 @@ export const likesAction: IAction = {
                     retries += 1;
 
                     if (process.env.DEBUG) {
-
                         console.error('Failed delete like', error);
                     }
                 }
@@ -181,5 +164,5 @@ export const likesAction: IAction = {
             Likes deleted: ${likesForDelete.length - failedDeleteLikes}
             Delete failed: ${failedDeleteLikes}
         `);
-    }
+    },
 };

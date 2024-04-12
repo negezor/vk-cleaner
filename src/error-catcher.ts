@@ -1,4 +1,3 @@
-process.on('uncaughtException', (error) => {
-
+process.on('uncaughtException', error => {
     console.error('Caught exception', error);
 });
