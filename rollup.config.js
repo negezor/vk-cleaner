@@ -5,15 +5,15 @@ import commonjsPlugin from '@rollup/plugin-commonjs';
 import nodeResolvePlugin from '@rollup/plugin-node-resolve';
 import typescriptPlugin from 'rollup-plugin-typescript2';
 
-import { tmpdir } from 'os';
-import { join as pathJoin } from 'path';
+import { tmpdir } from 'node:os';
+import { join as pathJoin } from 'node:path';
 
-import pkg from './package.json';
+import pkg from './package.json' assert { type: 'json' };
 
 const cacheRoot = pathJoin(tmpdir(), '.rpt2_cache');
 
-const src = pathJoin(__dirname, 'src');
-const dist = pathJoin(__dirname, 'dist');
+const src = pathJoin(import.meta.dirname, 'src');
+const dist = pathJoin(import.meta.dirname, 'dist');
 
 export default defineConfig({
     input: pathJoin(src, 'index.ts'),
