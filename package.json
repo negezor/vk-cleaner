@@ -43,8 +43,8 @@
         "watch": "npm run rollup:watch",
         "rollup:build": "rollup -c",
         "rollup:watch": "npm run rollup:build --watch",
-        "test": "npm run lint && npm run test:jest",
-        "test:jest": "jest --config jest.config.json --no-cache",
+        "test": "npm run lint && npm run test:node",
+		"test:node": "node --import tsx --test test/*.test.ts",
         "lint": "npm run lint:biome",
         "lint:biome": "biome lint --apply ./src"
     }
