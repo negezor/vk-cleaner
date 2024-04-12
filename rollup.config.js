@@ -1,3 +1,5 @@
+import { defineConfig } from 'rollup';
+
 import jsonPlugin from '@rollup/plugin-json';
 import commonjsPlugin from '@rollup/plugin-commonjs';
 import nodeResolvePlugin from '@rollup/plugin-node-resolve';
@@ -14,7 +16,7 @@ const src = pathJoin(__dirname, 'src');
 const dist = pathJoin(__dirname, 'dist');
 
 // eslint-disable-next-line import/no-default-export
-export default {
+export default defineConfig({
 	input: pathJoin(src, 'index.ts'),
 	external: process.env.NODE_ENV !== 'production'
 		? Object.keys(pkg.dependencies)
@@ -48,4 +50,4 @@ export default {
 			inlineDynamicImports: true
 		}
 	]
-};
+});
