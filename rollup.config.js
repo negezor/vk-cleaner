@@ -43,7 +43,7 @@ export default defineConfig({
     output: [
         {
             file: pathJoin(dist, 'cleaner.js'),
-            format: 'cjs',
+            format: 'esm',
             exports: 'named',
             banner: '#!/usr/bin/env node',
             inlineDynamicImports: true
