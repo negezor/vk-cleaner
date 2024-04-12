@@ -1,11 +1,11 @@
-import { existsSync } from 'fs';
+import { existsSync } from 'node:fs';
 import { stripIndents } from 'common-tags';
 import { API } from 'vk-io';
 
 import { authMethods } from './auth';
 
 import {
-	IAction,
+	type IAction,
 
 	commentsAction,
 	likesAction

@@ -1,6 +1,6 @@
-import { writeFileSync } from 'fs';
+import { writeFileSync } from 'node:fs';
 
-import { API, APIError, APIErrorCode } from 'vk-io';
+import { API, type APIError, APIErrorCode } from 'vk-io';
 import { DirectAuthorization, officialAppCredentials } from '@vk-io/authorization';
 
 import { reporter } from './reporter';
@@ -45,8 +45,6 @@ export const authMethods: IAuthMethod[] = [
 					}
 
 					reporter.error(`Another error: ${(error as Error).message}`);
-
-					continue;
 				}
 			}
 		}

@@ -1,4 +1,4 @@
-import { API } from 'vk-io';
+import type { API } from 'vk-io';
 
 export interface IActionCanRunOptions {
 	archivePath: string;

@@ -1,12 +1,12 @@
 import { stripIndents } from 'common-tags';
-import { API, resolveResource } from 'vk-io';
+import { type API, resolveResource } from 'vk-io';
 import { WritableStream as HTMLParserStream } from 'htmlparser2/lib/WritableStream';
 
-import { once } from 'events';
-import { createReadStream } from 'fs';
-import { join as pathJoin } from 'path';
+import { once } from 'node:events';
+import { createReadStream } from 'node:fs';
+import { join as pathJoin } from 'node:path';
 
-import { IAction } from './action';
+import type { IAction } from './action';
 
 import { formatDuration, getFiles } from '../helpers';
 import { reporter } from '../reporter';
