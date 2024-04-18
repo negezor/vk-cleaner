@@ -20,20 +20,20 @@
     },
     "type": "module",
     "dependencies": {
-        "@inquirer/prompts": "^4.3.2",
+        "@inquirer/prompts": "^5.0.1",
         "@vk-io/authorization": "^1.4.1",
         "common-tags": "^1.8.2",
         "htmlparser2": "^9.1.0",
         "vk-io": "^4.9.1"
     },
     "devDependencies": {
-        "@biomejs/biome": "^1.6.4",
+        "@biomejs/biome": "^1.7.0",
         "@rollup/plugin-commonjs": "^25.0.7",
         "@rollup/plugin-json": "^6.1.0",
         "@rollup/plugin-node-resolve": "^15.2.3",
         "@types/common-tags": "^1.8.4",
         "@types/node": "^20.12.7",
-        "rollup": "^4.14.2",
+        "rollup": "^4.14.3",
         "rollup-plugin-typescript2": "^0.36.0",
         "tsx": "^4.7.2",
         "typescript": "^5.4.5"
