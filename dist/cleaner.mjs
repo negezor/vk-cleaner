@@ -4,14 +4,14 @@ import require$$0$4 from 'os';
 import require$$0$3 from 'tty';
 import * as readline$1 from 'node:readline';
 import require$$1$2, { Readable, Stream as Stream$1, PassThrough } from 'stream';
+import process$2 from 'node:process';
 import require$$0$6, { createReadStream, promises } from 'fs';
-import require$$0$5, { deprecate, inspect, promisify } from 'util';
+import require$$0$5, { inspect, deprecate, promisify } from 'util';
 import require$$1$5 from 'child_process';
 import require$$0$7 from 'buffer';
 import require$$1$3 from 'string_decoder';
 import require$$1$4 from 'path';
 import require$$2$1 from 'crypto';
-import { inspectable } from 'inspectable';
 import { globalAgent, createServer } from 'https';
 import { createServer as createServer$1 } from 'http';
 import { writeFileSync, readdirSync, lstatSync, createReadStream as createReadStream$1, existsSync, statSync, promises as promises$1 } from 'node:fs';
@@ -4432,9 +4432,8 @@ function infinite({ active, lastActive, total, pageSize, pointer, }) {
     return pointer;
 }
 
-function usePagination({ items, active, renderItem, pageSize, loop = true, theme: defaultTheme, }) {
+function usePagination({ items, active, renderItem, pageSize, loop = true, }) {
     const state = useRef({ position: 0, lastActive: 0 });
-    const theme = makeTheme(defaultTheme);
     const position = loop
         ? infinite({
             active,
@@ -4450,7 +4449,7 @@ function usePagination({ items, active, renderItem, pageSize, loop = true, theme
         });
     state.current.position = position;
     state.current.lastActive = active;
-    const visibleLines = lines({
+    return lines({
         items,
         width: readlineWidth(),
         renderItem,
@@ -4458,10 +4457,6 @@ function usePagination({ items, active, renderItem, pageSize, loop = true, theme
         position,
         pageSize,
     }).join('\n');
-    if (items.length > pageSize) {
-        return `${visibleLines}\n${theme.style.help('(Use arrow keys to reveal more choices)')}`;
-    }
-    return visibleLines;
 }
 
 class CancelablePromise extends Promise {
@@ -5272,178 +5267,306 @@ function createPrompt(view) {
     return prompt;
 }
 
-var figures$2 = {exports: {}};
-
-var matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
-
-var escapeStringRegexp$1 = function (str) {
-	if (typeof str !== 'string') {
-		throw new TypeError('Expected a string');
-	}
-
-	return str.replace(matchOperatorsRe, '\\$&');
-};
-
-const escapeStringRegexp = escapeStringRegexp$1;
-
-const {platform} = process;
-
-const main$1 = {
-	tick: '✔',
-	cross: '✖',
-	star: '★',
-	square: '▇',
-	squareSmall: '◻',
-	squareSmallFilled: '◼',
-	play: '▶',
-	circle: '◯',
-	circleFilled: '◉',
-	circleDotted: '◌',
-	circleDouble: '◎',
-	circleCircle: 'ⓞ',
-	circleCross: 'ⓧ',
-	circlePipe: 'Ⓘ',
-	circleQuestionMark: '?⃝',
-	bullet: '●',
-	dot: '․',
-	line: '─',
-	ellipsis: '…',
-	pointer: '❯',
-	pointerSmall: '›',
-	info: 'ℹ',
-	warning: '⚠',
-	hamburger: '☰',
-	smiley: '㋡',
-	mustache: '෴',
-	heart: '♥',
-	nodejs: '⬢',
-	arrowUp: '↑',
-	arrowDown: '↓',
-	arrowLeft: '←',
-	arrowRight: '→',
-	radioOn: '◉',
-	radioOff: '◯',
-	checkboxOn: '☒',
-	checkboxOff: '☐',
-	checkboxCircleOn: 'ⓧ',
-	checkboxCircleOff: 'Ⓘ',
-	questionMarkPrefix: '?⃝',
-	oneHalf: '½',
-	oneThird: '⅓',
-	oneQuarter: '¼',
-	oneFifth: '⅕',
-	oneSixth: '⅙',
-	oneSeventh: '⅐',
-	oneEighth: '⅛',
-	oneNinth: '⅑',
-	oneTenth: '⅒',
-	twoThirds: '⅔',
-	twoFifths: '⅖',
-	threeQuarters: '¾',
-	threeFifths: '⅗',
-	threeEighths: '⅜',
-	fourFifths: '⅘',
-	fiveSixths: '⅚',
-	fiveEighths: '⅝',
-	sevenEighths: '⅞'
-};
-
-const windows = {
-	tick: '√',
-	cross: '×',
-	star: '*',
-	square: '█',
-	squareSmall: '[ ]',
-	squareSmallFilled: '[█]',
-	play: '►',
-	circle: '( )',
-	circleFilled: '(*)',
-	circleDotted: '( )',
-	circleDouble: '( )',
-	circleCircle: '(○)',
-	circleCross: '(×)',
-	circlePipe: '(│)',
-	circleQuestionMark: '(?)',
-	bullet: '*',
-	dot: '.',
-	line: '─',
-	ellipsis: '...',
-	pointer: '>',
-	pointerSmall: '»',
-	info: 'i',
-	warning: '‼',
-	hamburger: '≡',
-	smiley: '☺',
-	mustache: '┌─┐',
-	heart: main$1.heart,
-	nodejs: '♦',
-	arrowUp: main$1.arrowUp,
-	arrowDown: main$1.arrowDown,
-	arrowLeft: main$1.arrowLeft,
-	arrowRight: main$1.arrowRight,
-	radioOn: '(*)',
-	radioOff: '( )',
-	checkboxOn: '[×]',
-	checkboxOff: '[ ]',
-	checkboxCircleOn: '(×)',
-	checkboxCircleOff: '( )',
-	questionMarkPrefix: '？',
-	oneHalf: '1/2',
-	oneThird: '1/3',
-	oneQuarter: '1/4',
-	oneFifth: '1/5',
-	oneSixth: '1/6',
-	oneSeventh: '1/7',
-	oneEighth: '1/8',
-	oneNinth: '1/9',
-	oneTenth: '1/10',
-	twoThirds: '2/3',
-	twoFifths: '2/5',
-	threeQuarters: '3/4',
-	threeFifths: '3/5',
-	threeEighths: '3/8',
-	fourFifths: '4/5',
-	fiveSixths: '5/6',
-	fiveEighths: '5/8',
-	sevenEighths: '7/8'
-};
-
-if (platform === 'linux') {
-	// The main one doesn't look that good on Ubuntu.
-	main$1.questionMarkPrefix = '?';
+// process.env dot-notation access prints:
+// Property 'TERM' comes from an index signature, so it must be accessed with ['TERM'].ts(4111)
+/* eslint dot-notation: ["off"] */
+// Ported from is-unicode-supported
+function isUnicodeSupported() {
+    if (process$2.platform !== 'win32') {
+        return process$2.env['TERM'] !== 'linux'; // Linux console (kernel)
+    }
+    return (Boolean(process$2.env['WT_SESSION']) || // Windows Terminal
+        Boolean(process$2.env['TERMINUS_SUBLIME']) || // Terminus (<0.2.27)
+        process$2.env['ConEmuTask'] === '{cmd::Cmder}' || // ConEmu and cmder
+        process$2.env['TERM_PROGRAM'] === 'Terminus-Sublime' ||
+        process$2.env['TERM_PROGRAM'] === 'vscode' ||
+        process$2.env['TERM'] === 'xterm-256color' ||
+        process$2.env['TERM'] === 'alacritty' ||
+        process$2.env['TERMINAL_EMULATOR'] === 'JetBrains-JediTerm');
 }
-
-const figures = platform === 'win32' ? windows : main$1;
-
-const fn = string => {
-	if (figures === main$1) {
-		return string;
-	}
-
-	for (const [key, value] of Object.entries(main$1)) {
-		if (value === figures[key]) {
-			continue;
-		}
-
-		string = string.replace(new RegExp(escapeStringRegexp(value), 'g'), figures[key]);
-	}
-
-	return string;
+// Ported from figures
+const common$1 = {
+    circleQuestionMark: '(?)',
+    questionMarkPrefix: '(?)',
+    square: '█',
+    squareDarkShade: '▓',
+    squareMediumShade: '▒',
+    squareLightShade: '░',
+    squareTop: '▀',
+    squareBottom: '▄',
+    squareLeft: '▌',
+    squareRight: '▐',
+    squareCenter: '■',
+    bullet: '●',
+    dot: '․',
+    ellipsis: '…',
+    pointerSmall: '›',
+    triangleUp: '▲',
+    triangleUpSmall: '▴',
+    triangleDown: '▼',
+    triangleDownSmall: '▾',
+    triangleLeftSmall: '◂',
+    triangleRightSmall: '▸',
+    home: '⌂',
+    heart: '♥',
+    musicNote: '♪',
+    musicNoteBeamed: '♫',
+    arrowUp: '↑',
+    arrowDown: '↓',
+    arrowLeft: '←',
+    arrowRight: '→',
+    arrowLeftRight: '↔',
+    arrowUpDown: '↕',
+    almostEqual: '≈',
+    notEqual: '≠',
+    lessOrEqual: '≤',
+    greaterOrEqual: '≥',
+    identical: '≡',
+    infinity: '∞',
+    subscriptZero: '₀',
+    subscriptOne: '₁',
+    subscriptTwo: '₂',
+    subscriptThree: '₃',
+    subscriptFour: '₄',
+    subscriptFive: '₅',
+    subscriptSix: '₆',
+    subscriptSeven: '₇',
+    subscriptEight: '₈',
+    subscriptNine: '₉',
+    oneHalf: '½',
+    oneThird: '⅓',
+    oneQuarter: '¼',
+    oneFifth: '⅕',
+    oneSixth: '⅙',
+    oneEighth: '⅛',
+    twoThirds: '⅔',
+    twoFifths: '⅖',
+    threeQuarters: '¾',
+    threeFifths: '⅗',
+    threeEighths: '⅜',
+    fourFifths: '⅘',
+    fiveSixths: '⅚',
+    fiveEighths: '⅝',
+    sevenEighths: '⅞',
+    line: '─',
+    lineBold: '━',
+    lineDouble: '═',
+    lineDashed0: '┄',
+    lineDashed1: '┅',
+    lineDashed2: '┈',
+    lineDashed3: '┉',
+    lineDashed4: '╌',
+    lineDashed5: '╍',
+    lineDashed6: '╴',
+    lineDashed7: '╶',
+    lineDashed8: '╸',
+    lineDashed9: '╺',
+    lineDashed10: '╼',
+    lineDashed11: '╾',
+    lineDashed12: '−',
+    lineDashed13: '–',
+    lineDashed14: '‐',
+    lineDashed15: '⁃',
+    lineVertical: '│',
+    lineVerticalBold: '┃',
+    lineVerticalDouble: '║',
+    lineVerticalDashed0: '┆',
+    lineVerticalDashed1: '┇',
+    lineVerticalDashed2: '┊',
+    lineVerticalDashed3: '┋',
+    lineVerticalDashed4: '╎',
+    lineVerticalDashed5: '╏',
+    lineVerticalDashed6: '╵',
+    lineVerticalDashed7: '╷',
+    lineVerticalDashed8: '╹',
+    lineVerticalDashed9: '╻',
+    lineVerticalDashed10: '╽',
+    lineVerticalDashed11: '╿',
+    lineDownLeft: '┐',
+    lineDownLeftArc: '╮',
+    lineDownBoldLeftBold: '┓',
+    lineDownBoldLeft: '┒',
+    lineDownLeftBold: '┑',
+    lineDownDoubleLeftDouble: '╗',
+    lineDownDoubleLeft: '╖',
+    lineDownLeftDouble: '╕',
+    lineDownRight: '┌',
+    lineDownRightArc: '╭',
+    lineDownBoldRightBold: '┏',
+    lineDownBoldRight: '┎',
+    lineDownRightBold: '┍',
+    lineDownDoubleRightDouble: '╔',
+    lineDownDoubleRight: '╓',
+    lineDownRightDouble: '╒',
+    lineUpLeft: '┘',
+    lineUpLeftArc: '╯',
+    lineUpBoldLeftBold: '┛',
+    lineUpBoldLeft: '┚',
+    lineUpLeftBold: '┙',
+    lineUpDoubleLeftDouble: '╝',
+    lineUpDoubleLeft: '╜',
+    lineUpLeftDouble: '╛',
+    lineUpRight: '└',
+    lineUpRightArc: '╰',
+    lineUpBoldRightBold: '┗',
+    lineUpBoldRight: '┖',
+    lineUpRightBold: '┕',
+    lineUpDoubleRightDouble: '╚',
+    lineUpDoubleRight: '╙',
+    lineUpRightDouble: '╘',
+    lineUpDownLeft: '┤',
+    lineUpBoldDownBoldLeftBold: '┫',
+    lineUpBoldDownBoldLeft: '┨',
+    lineUpDownLeftBold: '┥',
+    lineUpBoldDownLeftBold: '┩',
+    lineUpDownBoldLeftBold: '┪',
+    lineUpDownBoldLeft: '┧',
+    lineUpBoldDownLeft: '┦',
+    lineUpDoubleDownDoubleLeftDouble: '╣',
+    lineUpDoubleDownDoubleLeft: '╢',
+    lineUpDownLeftDouble: '╡',
+    lineUpDownRight: '├',
+    lineUpBoldDownBoldRightBold: '┣',
+    lineUpBoldDownBoldRight: '┠',
+    lineUpDownRightBold: '┝',
+    lineUpBoldDownRightBold: '┡',
+    lineUpDownBoldRightBold: '┢',
+    lineUpDownBoldRight: '┟',
+    lineUpBoldDownRight: '┞',
+    lineUpDoubleDownDoubleRightDouble: '╠',
+    lineUpDoubleDownDoubleRight: '╟',
+    lineUpDownRightDouble: '╞',
+    lineDownLeftRight: '┬',
+    lineDownBoldLeftBoldRightBold: '┳',
+    lineDownLeftBoldRightBold: '┯',
+    lineDownBoldLeftRight: '┰',
+    lineDownBoldLeftBoldRight: '┱',
+    lineDownBoldLeftRightBold: '┲',
+    lineDownLeftRightBold: '┮',
+    lineDownLeftBoldRight: '┭',
+    lineDownDoubleLeftDoubleRightDouble: '╦',
+    lineDownDoubleLeftRight: '╥',
+    lineDownLeftDoubleRightDouble: '╤',
+    lineUpLeftRight: '┴',
+    lineUpBoldLeftBoldRightBold: '┻',
+    lineUpLeftBoldRightBold: '┷',
+    lineUpBoldLeftRight: '┸',
+    lineUpBoldLeftBoldRight: '┹',
+    lineUpBoldLeftRightBold: '┺',
+    lineUpLeftRightBold: '┶',
+    lineUpLeftBoldRight: '┵',
+    lineUpDoubleLeftDoubleRightDouble: '╩',
+    lineUpDoubleLeftRight: '╨',
+    lineUpLeftDoubleRightDouble: '╧',
+    lineUpDownLeftRight: '┼',
+    lineUpBoldDownBoldLeftBoldRightBold: '╋',
+    lineUpDownBoldLeftBoldRightBold: '╈',
+    lineUpBoldDownLeftBoldRightBold: '╇',
+    lineUpBoldDownBoldLeftRightBold: '╊',
+    lineUpBoldDownBoldLeftBoldRight: '╉',
+    lineUpBoldDownLeftRight: '╀',
+    lineUpDownBoldLeftRight: '╁',
+    lineUpDownLeftBoldRight: '┽',
+    lineUpDownLeftRightBold: '┾',
+    lineUpBoldDownBoldLeftRight: '╂',
+    lineUpDownLeftBoldRightBold: '┿',
+    lineUpBoldDownLeftBoldRight: '╃',
+    lineUpBoldDownLeftRightBold: '╄',
+    lineUpDownBoldLeftBoldRight: '╅',
+    lineUpDownBoldLeftRightBold: '╆',
+    lineUpDoubleDownDoubleLeftDoubleRightDouble: '╬',
+    lineUpDoubleDownDoubleLeftRight: '╫',
+    lineUpDownLeftDoubleRightDouble: '╪',
+    lineCross: '╳',
+    lineBackslash: '╲',
+    lineSlash: '╱',
 };
-
-figures$2.exports = Object.assign(fn, figures);
-figures$2.exports.main = main$1;
-figures$2.exports.windows = windows;
-
-var figuresExports = figures$2.exports;
-var figures$1 = /*@__PURE__*/getDefaultExportFromCjs(figuresExports);
+const specialMainSymbols = {
+    tick: '✔',
+    info: 'ℹ',
+    warning: '⚠',
+    cross: '✘',
+    squareSmall: '◻',
+    squareSmallFilled: '◼',
+    circle: '◯',
+    circleFilled: '◉',
+    circleDotted: '◌',
+    circleDouble: '◎',
+    circleCircle: 'ⓞ',
+    circleCross: 'ⓧ',
+    circlePipe: 'Ⓘ',
+    radioOn: '◉',
+    radioOff: '◯',
+    checkboxOn: '☒',
+    checkboxOff: '☐',
+    checkboxCircleOn: 'ⓧ',
+    checkboxCircleOff: 'Ⓘ',
+    pointer: '❯',
+    triangleUpOutline: '△',
+    triangleLeft: '◀',
+    triangleRight: '▶',
+    lozenge: '◆',
+    lozengeOutline: '◇',
+    hamburger: '☰',
+    smiley: '㋡',
+    mustache: '෴',
+    star: '★',
+    play: '▶',
+    nodejs: '⬢',
+    oneSeventh: '⅐',
+    oneNinth: '⅑',
+    oneTenth: '⅒',
+};
+const specialFallbackSymbols = {
+    tick: '√',
+    info: 'i',
+    warning: '‼',
+    cross: '×',
+    squareSmall: '□',
+    squareSmallFilled: '■',
+    circle: '( )',
+    circleFilled: '(*)',
+    circleDotted: '( )',
+    circleDouble: '( )',
+    circleCircle: '(○)',
+    circleCross: '(×)',
+    circlePipe: '(│)',
+    radioOn: '(*)',
+    radioOff: '( )',
+    checkboxOn: '[×]',
+    checkboxOff: '[ ]',
+    checkboxCircleOn: '(×)',
+    checkboxCircleOff: '( )',
+    pointer: '>',
+    triangleUpOutline: '∆',
+    triangleLeft: '◄',
+    triangleRight: '►',
+    lozenge: '♦',
+    lozengeOutline: '◊',
+    hamburger: '≡',
+    smiley: '☺',
+    mustache: '┌─┐',
+    star: '✶',
+    play: '►',
+    nodejs: '♦',
+    oneSeventh: '1/7',
+    oneNinth: '1/9',
+    oneTenth: '1/10',
+};
+const mainSymbols = { ...common$1, ...specialMainSymbols };
+const fallbackSymbols = {
+    ...common$1,
+    ...specialFallbackSymbols,
+};
+const shouldUseMain = isUnicodeSupported();
+const figures = shouldUseMain ? mainSymbols : fallbackSymbols;
 
 /**
  * Separator object
  * Used to space/separate choices group
  */
 class Separator {
-    separator = chalk$1.dim(new Array(15).join(figures$1.line));
+    separator = chalk$1.dim(new Array(15).join(figures.line));
     type = 'separator';
     constructor(separator) {
         if (separator) {
@@ -5457,14 +5580,15 @@ class Separator {
 
 const checkboxTheme = {
     icon: {
-        checked: chalk$1.green(figures$1.circleFilled),
-        unchecked: figures$1.circle,
-        cursor: figures$1.pointer,
+        checked: chalk$1.green(figures.circleFilled),
+        unchecked: figures.circle,
+        cursor: figures.pointer,
     },
     style: {
         disabledChoice: (text) => chalk$1.dim(`- ${text}`),
         renderSelectedChoices: (selectedChoices) => selectedChoices.map((choice) => choice.name || choice.value).join(', '),
     },
+    helpMode: 'auto',
 };
 function isSelectable$1(item) {
     return !Separator.isSeparator(item) && !item.disabled;
@@ -5484,12 +5608,12 @@ var checkbox = createPrompt((config, done) => {
     const { instructions, pageSize = 7, loop = true, choices, required, validate = () => true, } = config;
     const theme = makeTheme(checkboxTheme, config.theme);
     const prefix = usePrefix({ theme });
+    const firstRender = useRef(true);
     const [status, setStatus] = useState('pending');
     const [items, setItems] = useState(choices.map((choice) => ({ ...choice })));
     const bounds = useMemo(() => {
         const first = items.findIndex(isSelectable$1);
-        // TODO: Replace with `findLastIndex` when it's available.
-        const last = items.length - 1 - [...items].reverse().findIndex(isSelectable$1);
+        const last = items.findLastIndex(isSelectable$1);
         if (first < 0) {
             throw new ValidationError('[checkbox prompt] No selectable choices. All choices are disabled.');
         }
@@ -5567,17 +5691,20 @@ var checkbox = createPrompt((config, done) => {
         },
         pageSize,
         loop,
-        theme,
     });
     if (status === 'done') {
         const selection = items.filter(isChecked);
         const answer = theme.style.answer(theme.style.renderSelectedChoices(selection, items));
         return `${prefix} ${message} ${answer}`;
     }
-    let helpTip = '';
-    if (showHelpTip && (instructions === undefined || instructions)) {
+    let helpTipTop = '';
+    let helpTipBottom = '';
+    if (theme.helpMode === 'always' ||
+        (theme.helpMode === 'auto' &&
+            showHelpTip &&
+            (instructions === undefined || instructions))) {
         if (typeof instructions === 'string') {
-            helpTip = instructions;
+            helpTipTop = instructions;
         }
         else {
             const keys = [
@@ -5586,14 +5713,20 @@ var checkbox = createPrompt((config, done) => {
                 `${theme.style.key('i')} to invert selection`,
                 `and ${theme.style.key('enter')} to proceed`,
             ];
-            helpTip = ` (Press ${keys.join(', ')})`;
+            helpTipTop = ` (Press ${keys.join(', ')})`;
+        }
+        if (items.length > pageSize &&
+            (theme.helpMode === 'always' ||
+                (theme.helpMode === 'auto' && firstRender.current))) {
+            helpTipBottom = `\n${theme.style.help('(Use arrow keys to reveal more choices)')}`;
+            firstRender.current = false;
         }
     }
     let error = '';
     if (errorMsg) {
-        error = theme.style.error(errorMsg);
+        error = `\n${theme.style.error(errorMsg)}`;
     }
-    return `${prefix} ${message}${helpTip}\n${page}\n${error}${ansiEscapes.cursorHide}`;
+    return `${prefix} ${message}${helpTipTop}\n${page}${helpTipBottom}${error}${ansiEscapes.cursorHide}`;
 });
 
 var confirm = createPrompt((config, done) => {
@@ -19756,8 +19889,9 @@ var promptPassword = createPrompt((config, done) => {
 });
 
 const selectTheme = {
-    icon: { cursor: figures$1.pointer },
+    icon: { cursor: figures.pointer },
     style: { disabled: (text) => chalk$1.dim(`- ${text}`) },
+    helpMode: 'auto',
 };
 function isSelectable(item) {
     return !Separator.isSeparator(item) && !item.disabled;
@@ -19771,10 +19905,10 @@ var select$1 = createPrompt((config, done) => {
     const searchTimeoutRef = useRef(undefined);
     const bounds = useMemo(() => {
         const first = items.findIndex(isSelectable);
-        // TODO: Replace with `findLastIndex` when it's available.
-        const last = items.length - 1 - [...items].reverse().findIndex(isSelectable);
-        if (first < 0)
+        const last = items.findLastIndex(isSelectable);
+        if (first < 0) {
             throw new ValidationError('[select prompt] No selectable choices. All choices are disabled.');
+        }
         return { first, last };
     }, [items]);
     const defaultItemIndex = useMemo(() => {
@@ -19834,10 +19968,17 @@ var select$1 = createPrompt((config, done) => {
         }
     });
     const message = theme.style.message(config.message);
-    let helpTip;
-    if (firstRender.current && items.length <= pageSize) {
+    let helpTipTop = '';
+    let helpTipBottom = '';
+    if (theme.helpMode === 'always' ||
+        (theme.helpMode === 'auto' && firstRender.current)) {
         firstRender.current = false;
-        helpTip = theme.style.help('(Use arrow keys)');
+        if (items.length > pageSize) {
+            helpTipBottom = `\n${theme.style.help('(Use arrow keys to reveal more choices)')}`;
+        }
+        else {
+            helpTipTop = theme.style.help('(Use arrow keys)');
+        }
     }
     const page = usePagination({
         items,
@@ -19857,7 +19998,6 @@ var select$1 = createPrompt((config, done) => {
         },
         pageSize,
         loop,
-        theme,
     });
     if (status === 'done') {
         const answer = selectedChoice.name ||
@@ -19868,7 +20008,7 @@ var select$1 = createPrompt((config, done) => {
     const choiceDescription = selectedChoice.description
         ? `\n${selectedChoice.description}`
         : ``;
-    return `${[prefix, message, helpTip].filter(Boolean).join(' ')}\n${page}${choiceDescription}${ansiEscapes.cursorHide}`;
+    return `${[prefix, message, helpTipTop].filter(Boolean).join(' ')}\n${page}${choiceDescription}${helpTipBottom}${ansiEscapes.cursorHide}`;
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -22229,6 +22369,25 @@ if (typeof Symbol === "function" && typeof Symbol.toStringTag === "symbol") {
         value: "AbortController",
     });
 }
+
+const inspectable = (klass, { serialize = () => ({}), stringify = (instance, payload, context) => (`${context.stylize(klass.name, 'special')} ${context.inspect(payload)}`), } = {}) => {
+    Object.defineProperty(klass.prototype, inspect.custom, {
+        value(depth, inspectContext) {
+            const context = {
+                stylize: inspectContext.stylize,
+                inspect: (payload, options) => {
+                    var _a;
+                    return (inspect(payload, {
+                        ...inspectContext,
+                        compact: (_a = options === null || options === void 0 ? void 0 : options.compact) !== null && _a !== void 0 ? _a : false,
+                    }));
+                },
+            };
+            const payload = serialize(this);
+            return stringify(this, payload, context);
+        },
+    });
+};
 
 /**
  * @license
