@@ -1,5 +1,5 @@
 import { stripIndents } from 'common-tags';
-import { WritableStream as HTMLParserStream } from 'htmlparser2/lib/WritableStream';
+import { WritableStream as HTMLParserStream } from 'htmlparser2/WritableStream';
 import { type API, type Objects, resolveResource } from 'vk-io';
 
 import { once } from 'node:events';
