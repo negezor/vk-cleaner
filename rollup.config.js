@@ -8,7 +8,7 @@ import typescriptPlugin from 'rollup-plugin-typescript2';
 import { tmpdir } from 'node:os';
 import { join as pathJoin } from 'node:path';
 
-import pkg from './package.json' assert { type: 'json' };
+import pkg from './package.json' with { type: 'json' };
 
 const cacheRoot = pathJoin(tmpdir(), '.rpt2_cache');
 
