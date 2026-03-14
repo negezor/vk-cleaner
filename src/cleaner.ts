@@ -4,10 +4,8 @@ import { API } from 'vk-io';
 
 import { existsSync } from 'node:fs';
 
+import { commentsAction, type IAction, likesAction } from './actions';
 import { authMethods } from './auth';
-
-import { type IAction, commentsAction, likesAction } from './actions';
-
 import { callbackService } from './callback-service';
 import { delay, formatDuration, getDirectories } from './helpers';
 
@@ -108,7 +106,7 @@ async function run() {
             ...action,
 
             name: `${action.name} — ${action.description}`,
-        }))
+        })),
     });
 
     const selectedActions = Object.values(actions).filter(action => selectedActionValues.includes(action.value));

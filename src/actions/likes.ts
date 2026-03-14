@@ -6,9 +6,8 @@ import { once } from 'node:events';
 import { createReadStream } from 'node:fs';
 import { join as pathJoin } from 'node:path';
 
-import type { IAction } from './action';
-
 import { delay, formatDuration, getDirectories, getFiles } from '../helpers';
+import type { IAction } from './action';
 
 export interface IDeleteLikeOptions {
     type: Objects.LikesType;
@@ -145,7 +144,6 @@ export const likesAction: IAction = {
             process.stdout.cursorTo(0);
             process.stdout.write(`Progress ${deleteLikesTicks}/${likesForDelete.length}`);
         };
-
 
         let failedDeleteLikes = 0;
 

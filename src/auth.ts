@@ -1,5 +1,4 @@
 import { input, password as promptPassword } from '@inquirer/prompts';
-
 import { DirectAuthorization, officialAppCredentials } from '@vk-io/authorization';
 import { API, type APIError, APIErrorCode } from 'vk-io';
 

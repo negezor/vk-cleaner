@@ -1,8 +1,7 @@
-import { defineConfig } from 'rollup';
-
-import jsonPlugin from '@rollup/plugin-json';
 import commonjsPlugin from '@rollup/plugin-commonjs';
+import jsonPlugin from '@rollup/plugin-json';
 import nodeResolvePlugin from '@rollup/plugin-node-resolve';
+import { defineConfig } from 'rollup';
 import typescriptPlugin from 'rollup-plugin-typescript2';
 
 import { tmpdir } from 'node:os';
@@ -17,16 +16,14 @@ const dist = pathJoin(import.meta.dirname, 'dist');
 
 export default defineConfig({
     input: pathJoin(src, 'index.ts'),
-    external: process.env.NODE_ENV !== 'production'
-        ? Object.keys(pkg.dependencies)
-        : [],
+    external: process.env.NODE_ENV !== 'production' ? Object.keys(pkg.dependencies) : [],
     plugins: [
         nodeResolvePlugin({}),
         commonjsPlugin({
-            include: 'node_modules/**'
+            include: 'node_modules/**',
         }),
         jsonPlugin({
-            preferConst: true
+            preferConst: true,
         }),
         typescriptPlugin({
             cacheRoot,
@@ -36,9 +33,9 @@ export default defineConfig({
             tsconfigOverride: {
                 outDir: dist,
                 rootDir: src,
-                include: [src]
-            }
-        })
+                include: [src],
+            },
+        }),
     ],
     output: [
         {
@@ -46,7 +43,7 @@ export default defineConfig({
             format: 'esm',
             exports: 'named',
             banner: '#!/usr/bin/env node',
-            inlineDynamicImports: true
-        }
-    ]
+            inlineDynamicImports: true,
+        },
+    ],
 });
