@@ -12,5 +12,17 @@
             "semicolons": "always",
             "arrowParentheses": "asNeeded"
         }
+    },
+    "assist": {
+        "actions": {
+            "source": {
+                "organizeImports": {
+                    "level": "on",
+                    "options": {
+                        "groups": [":PACKAGE:", ":BLANK_LINE:", ":NODE:", ":BLANK_LINE:", ":BLANK_LINE:", ":PATH:"]
+                    }
+                }
+            }
+        }
     }
 }
